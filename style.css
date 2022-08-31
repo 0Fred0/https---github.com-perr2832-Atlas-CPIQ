@@ -1,0 +1,42 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 250px auto;
+  grid-template-rows: 50px auto 100px;
+}
+
+#title {
+  background-color: rgb(201, 151, 158);
+  grid-area: 1 / 1 / 2 / 2;
+  padding: 10px;
+}
+
+#info {
+  background-color: rgb(170, 231, 170);
+  grid-area: 2 / 1 / 3 / 2;
+  padding: 10px;
+}
+
+#toggles {
+  background-color: rgb(183, 151, 201);
+  grid-area: 3 / 1 / 5 / 2;
+  padding: 10px;
+}
+
+#map {
+  background: beige;
+  grid-area: 1 / 2 / 5 / 3;
+  height: 100%;
+}
+
+.container {
+    font-size: 10px;
+}
