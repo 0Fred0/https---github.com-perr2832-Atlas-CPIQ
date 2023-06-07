@@ -1,0 +1,30 @@
+{
+  "name": "cpiproject",
+  "version": "1.0.0",
+  "description": "Creatintg a website to show historic meteorological data ",
+  "main": "test_node.js",
+  "types": "module",
+  "scripts": {
+    "test1": "test_express.js",
+    "test2": "test_node.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "none"
+  ],
+  "author": "FD",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "async": "^3.2.4",
+    "csv": "^6.2.3",
+    "csv-parse": "^5.3.2",
+    "csvjson-csv2json": "^5.0.6",
+    "csvjson-json2csv": "^1.0.3",
+    "csvtojson": "^2.0.10",
+    "fast-csv": "^4.3.6",
+    "jquery-csv": "^1.0.21"
+  }
+}
