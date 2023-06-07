@@ -1,0 +1,39 @@
+Atlas CPI-Q -- choses à faire
+
+1. Rose des vents
+   * Télécharger données des stations représentatives sur meteo.ec.gc.ca. Ceci peut se faire dans une console linux. Par example:
+
+    Intervalle de données horaire:
+
+    for year in `seq 1998 2008`;do for month in `seq 1 12`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=1&submit= Download+Data" ;done;done
+
+    Intervalle de données quotidien:
+
+    for year in `seq 1998 2008`;do for month in `seq 1 1`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=2&submit= Download+Data" ;done;done
+
+    Intervalle de données mensuel (période de temps spécifique):
+
+    for year in `seq 1998 2008`;do for month in `seq 1 12`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=3&submit= Download+Data" ;done;done
+
+    Intervalle de données mensuel (historique complet de la station):
+
+    for year in `seq 1998 2008`;do for month in `seq 1 1`;do wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1706&Year=${year}&Month=${month}&Day=14&timeframe=3&submit= Download+Data" ;done;done
+
+    * Ouvrir les données dans Excel et trouver le nombre d'évènements dans chaque catégorie.
+
+    * Utiliser Plotly (https://plotly.com/javascript/wind-rose-charts/) pour créer les roses.
+
+    * Intégrer les roses sur la carte.
+
+2. Données de vérification
+    *Les archives de la vérif se trouvent dans :\CPI_SPC\CONTRÔLE_DE_QUALITÉ_ET_SUIVI\WW_synoptiques\Régionale\Archives\Verif_Synop_TSH_Archives 2004-2020.xlsx
+
+    *Comptabiliser les WW dans chaque région.
+
+    *Afficher les données sur la carte.
+
+3. Distribution de la population 
+    *Ceci est déjà fait en grande partie. Les frontières et population de chaque municipalité de la province se situent dans les fichiers QC_est.json, QC_nord_A.json, QC_nord_B.json, et QC_ouest.json.
+
+4. Atlas des stations météorologiques
+    *En cours.
