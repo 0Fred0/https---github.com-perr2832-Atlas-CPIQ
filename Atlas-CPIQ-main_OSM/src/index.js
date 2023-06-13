@@ -32,6 +32,46 @@ let regionLayer = new ol.layer.Vector({
       color: 'black'
     })
   })
+  
+  
+  
+  
+  /*
+  function(feature, resolution){
+
+    let strike = null
+
+
+    let unselected = new ol.style.Style({
+      fill: new ol.style.Fill({
+        color: 'rgba(255,255,255,0)'
+      }), 
+      stroke: new ol.style.Stroke({
+        color: 'black'
+      })
+    })
+
+
+    let selected = new ol.style.Style({
+      fill: new ol.style.Fill({
+        color: 'rgba(255,255,255,0)'
+      }), 
+      stroke: new ol.style.Stroke({
+        color: 'red'
+      })
+    })
+
+
+    if (strike == null) {
+      return [unselected]
+    } else {
+      return [selected]
+    }
+
+
+  }
+
+  */
 })
 
 
@@ -1230,6 +1270,39 @@ map.on("singleclick", function(event) {
   } else if (layer.values_.title == 'regionLayer') {
     console.log("NNN")
 
+    let source = regionLayer.getSource()
+    console.log('Style')
+    console.log(feat.getStyle())
+
+    let features = source.getFeatures()
+    console.log('source')
+    console.log(source)
+
+    console.log('features')
+    console.log(features)
+
+    console.log('POLY_ID')
+    console.log(feat.values_.POLY_ID)
+
+    let polyIdSelected = feat.values_.POLY_ID
+
+
+    console.log('eachOne')
+    source.forEachFeature( function (feature) {
+      let polyIds = feature.values_.POLY_ID
+      if (polyIdSelected == polyIds) {
+        console.log(feature)
+        //regionLayer.setStyle({
+          //'stroke-color' : 'red'
+       // })
+        let dis = feature.get('values_')
+        console.log(dis)
+
+      }
+
+      
+    })
+
     
 
 
@@ -1904,7 +1977,6 @@ asyncCall();
 
 
 //statVerif(array_WX)
-
 
 
 
