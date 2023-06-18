@@ -32,47 +32,72 @@ let regionLayer = new ol.layer.Vector({
       color: 'black'
     })
   })
-  
-  
-  
-  
-  /*
-  function(feature, resolution){
-
-    let strike = null
-
-
-    let unselected = new ol.style.Style({
-      fill: new ol.style.Fill({
-        color: 'rgba(255,255,255,0)'
-      }), 
-      stroke: new ol.style.Stroke({
-        color: 'black'
-      })
-    })
-
-
-    let selected = new ol.style.Style({
-      fill: new ol.style.Fill({
-        color: 'rgba(255,255,255,0)'
-      }), 
-      stroke: new ol.style.Stroke({
-        color: 'red'
-      })
-    })
-
-
-    if (strike == null) {
-      return [unselected]
-    } else {
-      return [selected]
-    }
-
-
-  }
-
-  */
 })
+
+
+const styleHover = new ol.style.Style({
+  fill: new ol.style.Fill ({
+    color: 'rgba(128, 128, 128, 0.6)',
+  }),
+  stroke: new ol.style.Stroke ({
+    color: 'black',
+    width: 2,
+  }),
+});
+
+
+
+const styleClicked = new ol.style.Style({
+  fill: new ol.style.Fill({
+    color: 'rgba(255,0,0,0.4)'
+  }), 
+  stroke: new ol.style.Stroke({
+    color: 'black',
+    width: 2
+  })
+})
+
+
+
+/*
+let clickedRegion = function(feature, resolution){  // n'est normalement plus utile
+
+
+  let unselected = new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(255,255,255,0)'
+    }), 
+    stroke: new ol.style.Stroke({
+      color: 'black'
+    })
+  })
+
+
+  let selected = new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(255,0,0,0.4)'
+    }), 
+    stroke: new ol.style.Stroke({
+      color: 'black',
+ //     width: 5
+    })
+  })
+
+
+  if (feature.disposed == true) {
+    return [selected]
+  } else {
+    return [unselected]
+  }
+}
+*/
+
+
+
+
+
+
+
 
 
 let markerLayer = new ol.layer.Vector({
@@ -319,20 +344,22 @@ map.addLayer(layerMaps)
        .then(response => response.json())
        .then(data => {
 
+     
+
        var way = data.features
    
        var allVariables = []
-       var stNames = []
-       var stActivity = []
+       var stNames = []  // normalement inutile
+       var stActivity = []  // normalement inutile
 
     
 
 
        for (var i = 0; i < way.length; i++ ) {
         allVariables.push([way[i].properties.name, way[i].properties.provider, way[i].geometry.coordinates[0], way[i].geometry.coordinates[1], way[i].properties.code.TC, way[i].properties.firstyearofactivity, way[i].properties.lastyearofactivity])
-        stNames.push(way[i].properties.name)
+        stNames.push(way[i].properties.name)  // normalement inutile
 
-        stActivity.push(way[i].properties.active)
+        stActivity.push(way[i].properties.active)  // normalement inutile
        }
 
       
@@ -343,7 +370,7 @@ map.addLayer(layerMaps)
 
 */  
 
-      ////// pour un tableau mulit-D //////
+      ////// pour un tableau mulit-D auquel on enleve les nom qui se repete (on ne garde que les valeurs uniques //////
       const res = allVariables.reduce((a, c) => {
         if (!a.find(v => v[0] === c[0])) {
           a.push(c);
@@ -351,6 +378,8 @@ map.addLayer(layerMaps)
         return a;
       }, []);
 
+
+ 
 
       //var resr = allVariables.filter(onlyUnique);
       //var oneStNames = stNames.filter(onlyUnique);
@@ -383,9 +412,10 @@ map.addLayer(layerMaps)
 
 
       var uniqueStNames = airportStNames.concat(nonairportStNames);
-
+      console.log('UNIIIIIIIIIQUE')
+      console.log(uniqueStNames)
       
-
+      // Classement par ordre alphabétique // 
       function sortFunction(a, b) {
         if (a[0] === b[0]) {
             return 0;
@@ -397,6 +427,8 @@ map.addLayer(layerMaps)
 
 
       uniqueStNames.sort(sortFunction)
+      console.log(uniqueStNames)
+
 
       //uniqueStNames = uniqueStNames.sort();
 
@@ -463,9 +495,7 @@ map.addLayer(layerMaps)
       // SI JE MET LA LIGNE stValue=...ici, et que je met stValue en variable pour la fonction, l'action 'change' ne fonctionne plus. Voir sur Internet pourquoi par curiosité
       function newInfo() {
         var stValue = document.getElementById("selectSt").value
-        console.log('ETDE0')
-        console.log(stValue)
-
+    
     
         var newNetwork = []
         var newLng = []
@@ -500,36 +530,7 @@ map.addLayer(layerMaps)
         return newLat, newLng, newNetwork, newCode
       }
 
-      
-
-
     
-
-        
-/*
-        markerLayer.setStyle(function(feature) {
-     
-          let stName     = feature.getProperty('name')
-          let stProvider = feature.getProperty('provider')
-          let stActive   = feature.getProperty('active')
-          
-          let scale, fillColor, symbol
-          symbol = {
-            path: 'circle',
-            scale: 3,
-            strokeColor: "red",
-            strokeWeight: 1,
-            fillColor: fillColor,
-            fillOpacity: 1
-          }
-          return {
-            icon: symbol,
-            title: stName
-        }
-
-          })
-
-*/
 
 
       
@@ -622,6 +623,14 @@ map.addLayer(layerMaps)
   }
 
   makeWindGraph(stValue);
+
+
+
+
+
+
+
+
 
 
   var mapHMTL = document.getElementById("map")
@@ -725,19 +734,15 @@ map.addLayer(layerMaps)
     mapHMTL.style["grid-area"] = "2 / 2 / span 2 / span 1"
     mapHMTL.style["border-width"] = "0px 0px 0px 0px"
 
-
-
     analyseSection.style["visibility"] = "hidden"
     variableBtn.style["visibility"] = "hidden"
     variableAdvBtn.style["visibility"] = "hidden"
+    advSection = 'off'
 
-
-
-    /*
-    for (var i=0; i < SelectBtn.length; i++) {
-      SelectBtn[i].style["visibility"] = "hidden"
-    }
-    */
+    let source = regionLayer.getSource()
+    source.forEachFeature( function (feature) {
+      feature.setStyle(undefined)
+    })
 
   });
 
@@ -761,7 +766,44 @@ map.addLayer(layerMaps)
   });
 
 
+
+
+
+
+
+  fetch("data/public_zones.json")
+  .then(response => response.json())
+  .then(data => {
+
+
+
+   var pzFeatures = data.features
+
+   var pzVariables = []
+
+
+
+
+
+   for (var i = 0; i < pzFeatures.length; i++ ) {
+     pzVariables.push([pzFeatures[i].properties.NAME, pzFeatures[i].properties.PERIM_KM, pzFeatures[i].properties.AREA_KM2])
+   }
+
+
+
+
+  let advSection = 'off'
+
+
   advBtn.addEventListener("click", (event) => {
+
+    
+
+
+
+    if (advSection == 'off') {
+
+    
     mapHMTL.style["grid-area"] = "2 / 2 / span 1 / span 1"
     mapHMTL.style["border-width"] = "0px 0px 2px 0px"
     mapHMTL.style["border-style"] = "solid"
@@ -782,6 +824,48 @@ map.addLayer(layerMaps)
 
 
     analyseSCN.style["gridTemplateColumns"] = "30% 40% 30%"
+
+
+
+
+
+    let source = regionLayer.getSource()
+
+    source.forEachFeature( function (feature) {
+      if (feature.values_.POLY_ID == 800407) {    // POLY_ID de Montreal
+        feature.setStyle(styleClicked)
+        feature.disposed = true;
+        regionSelected = feature;
+      }
+    })
+
+
+
+     let newRgnName = []
+     let newRgnPerimeter = []
+     let newRgnArea = []
+
+     for (i = 0; i<pzVariables.length; i++) {
+      if (regionSelected.values_.NAME == pzVariables[i][0]) {
+        newRgnName += pzVariables[i][0]
+        newRgnPerimeter += pzVariables[i][1]
+        newRgnArea += pzVariables[i][2]
+      }
+     }
+
+
+     document.getElementById("info1").innerHTML = 'AIR:'
+     document.getElementById("info2").innerHTML = 'PERIMETRE:'
+
+
+     document.getElementById("code").innerHTML = newRgnName
+     document.getElementById("lat").innerHTML = newRgnPerimeter
+     document.getElementById("lng").innerHTML = newRgnArea
+     console.log(pzFeatures)
+     console.log('PZVARIABKES')
+     console.log(pzVariables)
+   
+
 
 
 
@@ -808,14 +892,106 @@ map.addLayer(layerMaps)
 
     canvasSCN.appendChild(newCanvas)
 
+    advSection = 'on'
+
     
     // yearSelector.style["marginLeft"] = "435px"
     //variableAdvBtn.style["marginLeft"] = "150px"
+    } else if (advSection == 'on') {
+      mapHMTL.style["grid-area"] = "2 / 2 / span 2 / span 1"
+      mapHMTL.style["border-width"] = "0px 0px 0px 0px"
 
+      analyseSection.style["visibility"] = "hidden"
+      variableBtn.style["visibility"] = "hidden"
+      variableAdvBtn.style["visibility"] = "hidden"
+
+
+
+    let source = regionLayer.getSource()
+    source.forEachFeature( function (feature) {
+      feature.setStyle(undefined)
+    })
+
+
+
+
+      advSection = 'off'
+
+    }
 
   });
 
 
+
+
+
+  let selected = null;
+
+  map.on('pointermove', function (event){
+    
+
+    if (advSection == 'on') {
+
+
+
+
+      
+      if (selected !== null) {
+        if(selected.disposed == false) {
+          selected.setStyle(undefined);
+          selected = null;
+        }
+      }
+
+
+      map.forEachFeatureAtPixel(event.pixel, function (feat, layer) {
+        if (feat.disposed == false) {
+          if (layer == regionLayer) {
+            console.log(feat)
+  
+            selected = feat
+  
+            feat.setStyle(styleHover);
+            console.log('feat')
+  
+            console.log(feat)
+            return true
+            
+          }
+        }
+        
+      })
+    
+  /*
+      map.forEachFeatureAtPixel(event.pixel, function (feat, layer) {
+  
+  
+        let source = regionLayer.getSource()
+  
+        let polyIdSelected = feat.values_.POLY_ID
+      
+      source.forEachFeature( function (feature) {
+        let polyIds = feature.values_.POLY_ID
+        if (polyIdSelected == polyIds) {
+          console.log(feature)
+      
+          //regionLayer.setStyle({
+            //'stroke-color' : 'red'
+         // })
+         feature.disposed = true
+        } else {
+          feature.disposed = false
+        }
+  
+         
+      })
+      })
+      */
+
+    }
+    })
+  
+  
 
 
 
@@ -1190,9 +1366,15 @@ map.addLayer(layerMaps)
 
 
 
+
+
+let regionSelected = null;
+
 map.on("singleclick", function(event) {
-  console.log("event")
+  console.log("EEEEEEEEEEEEEEEEEEEVENT")
   console.log(event)
+  console.log(regionSelected)
+
 
 
   
@@ -1267,43 +1449,55 @@ map.on("singleclick", function(event) {
     makeWindGraph(StNameModified);
 
 
-  } else if (layer.values_.title == 'regionLayer') {
+  } else if (layer.values_.title == 'regionLayer') {   // essayer avec if (layer == regionLayer)
     console.log("NNN")
-
-    let source = regionLayer.getSource()
-    console.log('Style')
-    console.log(feat.getStyle())
-
-    let features = source.getFeatures()
-    console.log('source')
-    console.log(source)
-
-    console.log('features')
-    console.log(features)
-
-    console.log('POLY_ID')
-    console.log(feat.values_.POLY_ID)
-
-    let polyIdSelected = feat.values_.POLY_ID
+    console.log(advSection)
 
 
-    console.log('eachOne')
-    source.forEachFeature( function (feature) {
-      let polyIds = feature.values_.POLY_ID
-      if (polyIdSelected == polyIds) {
-        console.log(feature)
-        //regionLayer.setStyle({
-          //'stroke-color' : 'red'
-       // })
-        let dis = feature.get('values_')
-        console.log(dis)
 
-      }
 
-      
-    })
+  
 
+
+    if (regionSelected !== null) {
     
+      regionSelected.setStyle(undefined);
+      regionSelected.disposed = false;
+
+      regionSelected = null;
+      
+    }
+
+
+    if (advSection == 'on') {
+      feat.disposed = true 
+      regionSelected = feat
+      feat.setStyle(styleClicked);
+      return true
+
+
+    } else if (advSection == 'off') {
+      console.log('TADAAAAAA')
+    }
+
+    console.log('regionSelectedregionSelected')
+    console.log(regionSelected.values_.NAME)
+
+/////////    ne fonctionne pas ////////
+    for (i = 0; i<pzVariables.length; i++) {
+      if (regionSelected.values_.NAME == pzVariables[i][0]) {
+        newRgnName += pzVariables[i][0]
+        newRgnPerimeter += pzVariables[i][1]
+        newRgnArea += pzVariables[i][2]
+      }
+     }
+
+     document.getElementById("code").innerHTML = newRgnName
+     document.getElementById("lat").innerHTML = newRgnPerimeter
+     document.getElementById("lng").innerHTML = newRgnArea
+
+
+///////////////////////////
 
 
   popupContainer.style["visibility"] = "visible"
@@ -1971,13 +2165,12 @@ asyncCall();
 //let { array_WX, array_Fin, array_Date, array_rgn, array_WX2, array_Cote, array_Vigie, array_Source, array_Fin2, array_texte, array_Faible, array_Cote2, array_WOCN, array_Dateconvertie, array_Critereatteint, array_Debut, array_Debut2, array_Details, array_Extreme, array_Moderee, array_Preavis, array_Region, array_Termine, array_Elevee, array_Emis, array_Evenementsdetail, array_ImpactsCommentaires, arrayNiveaudImpact, array_WXconvertie, array_WXconvImpacts } = getVerif(verifFile)
 
 
-
+})
 });
 
 
 
 //statVerif(array_WX)
-
 
 
 
