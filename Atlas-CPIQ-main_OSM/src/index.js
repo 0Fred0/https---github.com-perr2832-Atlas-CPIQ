@@ -427,7 +427,8 @@ map.addLayer(layerMaps)
 
 
       uniqueStNames.sort(sortFunction)
-      console.log(uniqueStNames)
+   
+
 
 
       //uniqueStNames = uniqueStNames.sort();
@@ -494,49 +495,59 @@ map.addLayer(layerMaps)
 
       // SI JE MET LA LIGNE stValue=...ici, et que je met stValue en variable pour la fonction, l'action 'change' ne fonctionne plus. Voir sur Internet pourquoi par curiosité
       function newInfo() {
-        var stValue = document.getElementById("selectSt").value
-    
-    
-        var newNetwork = []
-        var newLng = []
-        var newLat = []
-        var newCode = []
+        if (advSection == 'off') {   // pour essayer que le advFilter fonctionne. Faire des essaies puis enlever si ce n'est pas nécessaire
 
-        for (let i = 0; i < uniqueStNames.length; i++) {
-          if (stValue == uniqueStNames[i][0]) {
-            var newNetwork = uniqueStNames[i][1]
-            var newLng = uniqueStNames[i][2]
-            var newLat = uniqueStNames[i][3]
-            var newCode = uniqueStNames[i][4]
+        
+          var stValue = document.getElementById("selectSt").value
+      
+      
+          var newNetwork = []
+          var newLng = []
+          var newLat = []
+          var newCode = []
+
+          for (let i = 0; i < uniqueStNames.length; i++) {
+            if (stValue == uniqueStNames[i][0]) {
+              var newNetwork = uniqueStNames[i][1]
+              var newLng = uniqueStNames[i][2]
+              var newLat = uniqueStNames[i][3]
+              var newCode = uniqueStNames[i][4]
+            }
           }
-        }
+          console.log('NEEEWWWWWWS000000')
+          console.log(advSection)
 
-        map.getView().setCenter(ol.proj.transform([newLng, newLat], 'EPSG:4326', 'EPSG:3857'));
-
-
-        document.getElementById("lat").innerHTML = newLat
-        document.getElementById("lng").innerHTML = newLng
-        document.getElementById("ntw").innerHTML = newNetwork
-        if (newCode == '') {
-        document.getElementById("code").innerHTML = '/'
-        } else {
-        document.getElementById("code").innerHTML = newCode
-        }
+          console.log(newLng)
+          console.log(newLat)
+          map.getView().setCenter(ol.proj.transform([newLng, newLat], 'EPSG:4326', 'EPSG:3857'));
 
 
-        makeWindGraph(stValue);
+          document.getElementById("lat").innerHTML = newLat
+          document.getElementById("lng").innerHTML = newLng
+          document.getElementById("ntw").innerHTML = newNetwork
+          if (newCode == '') {
+          document.getElementById("code").innerHTML = '/'
+          } else {
+          document.getElementById("code").innerHTML = newCode
+          }
 
 
-        return newLat, newLng, newNetwork, newCode
+          makeWindGraph(stValue);
+
+
+          return newLat, newLng, newNetwork, newCode
+        } 
       }
 
     
 
-
+    let advSection = 'off'
       
-
+   
     var filter = document.getElementById("selectSt")
     filter.addEventListener("change", newInfo)
+    
+    
   
 
 
@@ -737,7 +748,7 @@ map.addLayer(layerMaps)
     analyseSection.style["visibility"] = "hidden"
     variableBtn.style["visibility"] = "hidden"
     variableAdvBtn.style["visibility"] = "hidden"
-    advSection = 'off'
+   
 
     let source = regionLayer.getSource()
     source.forEachFeature( function (feature) {
@@ -786,7 +797,7 @@ map.addLayer(layerMaps)
 
 
    for (var i = 0; i < pzFeatures.length; i++ ) {
-     pzVariables.push([pzFeatures[i].properties.NAME, pzFeatures[i].properties.PERIM_KM, pzFeatures[i].properties.AREA_KM2])
+     pzVariables.push([pzFeatures[i].properties.NAME, pzFeatures[i].properties.PERIM_KM, pzFeatures[i].properties.AREA_KM2, pzFeatures[i].properties.NOM, pzFeatures[i].properties.LAT_DD, pzFeatures[i].properties.LON_DD])
    }
 
 
@@ -797,11 +808,13 @@ map.addLayer(layerMaps)
 
   advBtn.addEventListener("click", (event) => {
 
+    console.log(advSection)
     
 
 
 
     if (advSection == 'off') {
+      
 
     
     mapHMTL.style["grid-area"] = "2 / 2 / span 1 / span 1"
@@ -864,6 +877,41 @@ map.addLayer(layerMaps)
      console.log(pzFeatures)
      console.log('PZVARIABKES')
      console.log(pzVariables)
+
+
+//// pour classer par ordre alphabétique ////
+     function sortFunction(a, b) {
+      if (a[0] === b[0]) {
+          return 0;
+      }
+      else {
+          return (a[0] < b[0]) ? -1 : 1;
+      }
+    }
+
+    pzVariables.sort(sortFunction)
+ 
+
+/// x[3] correspond dans pzVariables à .NOM
+     let pzList = []
+     for (let x of pzVariables) {
+      if (x[3] == "Montréal métropolitain - Laval") {
+        pzList += "<option selected=\"selected\"> " + x[3] + " </option>" + ","
+      } else {
+        pzList += "<option> " + x[3] + " </option>" + ","
+      }
+    }
+
+
+
+
+
+    document.getElementById("selectSt").innerHTML = pzList;
+    
+    console.log('PZVARIABKES')
+    console.log(pzList)
+
+
    
 
 
@@ -893,11 +941,11 @@ map.addLayer(layerMaps)
     canvasSCN.appendChild(newCanvas)
 
     advSection = 'on'
-
     
     // yearSelector.style["marginLeft"] = "435px"
     //variableAdvBtn.style["marginLeft"] = "150px"
     } else if (advSection == 'on') {
+      console.log(advSection)
       mapHMTL.style["grid-area"] = "2 / 2 / span 2 / span 1"
       mapHMTL.style["border-width"] = "0px 0px 0px 0px"
 
@@ -920,6 +968,58 @@ map.addLayer(layerMaps)
     }
 
   });
+
+
+
+    console.log('LKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
+    function newAdvInfo() {
+      if (advSection == 'on') {
+
+      
+      var stValue = document.getElementById("selectSt").value
+  
+  
+ 
+
+      for (let i = 0; i < pzVariables.length; i++) {
+        if (stValue == pzVariables[i][3]) {              /// x[3] correspond dans pzVariables à .NOM
+          newRgnName = pzVariables[i][0]
+          newRgnPerimeter = pzVariables[i][1]
+          newRgnArea = pzVariables[i][2]
+          newlatDD = pzVariables[i][4]
+          newlonDD = pzVariables[i][5]
+        }
+      }
+
+      map.getView().setCenter(ol.proj.transform([newlonDD, newlatDD], 'EPSG:4326', 'EPSG:3857'));
+      console.log('NEEEWWWWWWS')
+      console.log(newlonDD)
+      console.log(newlatDD)
+
+
+      document.getElementById("lat").innerHTML = newRgnPerimeter
+      document.getElementById("lng").innerHTML = newRgnArea
+      document.getElementById("code").innerHTML = newRgnName
+      
+
+
+      // makeWindGraph(stValue);
+
+
+      return newRgnPerimeter, newRgnArea, newRgnName
+      }
+    }
+
+  
+
+
+    
+    //// ne fonctionne pas. Reprendre ici ////
+
+
+    var advFilter = document.getElementById("selectSt")
+    advFilter.addEventListener("change", newAdvInfo)
+  
 
 
 
@@ -1030,6 +1130,185 @@ map.addLayer(layerMaps)
 
 
 
+
+
+  function getWarningStat (newCode, variableSCD) {
+    // specifier newCode avant la fonction
+
+
+    var analyseSCN = document.getElementById("analyseGraphs")
+      var columnLeft = document.getElementById("column-left")
+      var columnRight = document.getElementById("column-right")
+
+      var textRight = document.getElementById("text-right")
+      textRight.style["visibility"] = "visible" 
+
+      columnLeft.style["visibility"] = "visible"
+
+
+      var PODquestion = document.getElementById("PODquestion")
+      var FARquestion = document.getElementById("FARquestion")
+      var CSIquestion = document.getElementById("CSIquestion")
+      var BIAISquestion = document.getElementById("BIAISquestion")
+
+
+      var podSCN = document.getElementById("POD")
+      var farSCN = document.getElementById("FAR")
+      var csiSCN = document.getElementById("csi")
+      var biaisSCN = document.getElementById("biais")
+
+
+
+
+
+      /*
+      var PODoverlay = document.getElementById("PODoverlay")
+      var FARoverlay = document.getElementById("FARoverlay")
+      var CSIoverlay = document.getElementById("CSIoverlay")
+      var BIAISoverlay = document.getElementById("BIAISoverlay")
+
+*/
+
+
+      PODquestion.addEventListener("mouseover", (event) => {
+        console.log("FONE")
+
+        var PODoverlay = document.createElement("div")
+        PODoverlay.innerHTML = "HDHHDHDHD"
+        analyseSCN.appendChild(PODoverlay)
+      })
+
+
+      
+      FARquestion.addEventListener("mouseover", (event) => {
+        FARoverlay.style["visibility"] = "visible"
+      })
+
+      CSIquestion.addEventListener("mouseover", (event) => {
+        CSIoverlay.style["visibility"] = "visible"
+      })
+
+      BIAISquestion.addEventListener("mouseover", (event) => {
+        BIAISoverlay.style["visibility"] = "visible"
+      })
+
+
+      var canvasSCN = document.getElementById('column-canvas')
+      while (canvasSCN.firstChild) {
+        canvasSCN.removeChild(canvasSCN.firstChild);
+      }
+
+
+      var newCanvas = document.createElement('canvas');
+      newCanvas.id = 'analyseCanvas'
+      newCanvas.style["backgroundColor"] = "white"
+      newCanvas.style["margin"] = "auto"
+      newCanvas.style["display"] = "block"
+
+
+      newCanvas.style.width='100%';
+      newCanvas.style.height='95%';
+      //canvas.width  = canvas.offsetWidth;
+      //canvas.height = canvas.offsetHeight;
+
+      
+
+      canvasSCN.appendChild(newCanvas)
+
+
+
+      /*
+      var stValue = document.getElementById("selectSt").value
+      var variableSCD = document.getElementById("variableAdvSelector").value
+      var yearSCD = document.getElementById("yearSelector").value
+      var monthSCD = document.getElementById("monthOrPeriodSelector").value
+      var daySCD = document.getElementById("daySelector").value
+      */
+
+
+
+
+
+
+
+
+    var coteArray = retrieveAdvData(newCode, variableSCD)
+    console.log("DEUXIEME TEST")
+    console.log(newCode)
+    console.log(variableSCD)
+
+    coteArray
+    .then(values => {
+      console.log('valuestralala')
+      console.log(values)
+
+
+      let D = values[0]
+      let MQ = values[1]
+      let Mpi = values[2]
+      let MT = values[3]
+      let MA = values[4]
+      let MP0 = values[5]
+      let F = values[6]
+      let U = values[7]
+      let i = values[8]
+
+
+      console.log("BCBCCBBC")
+
+      let succes = D + MQ + Mpi + MT
+      let manque = MA + MP0
+
+      let POD = succes/(succes + manque)
+      // let restPOD = 1 - POD
+
+      let fausseAlerte = F + U
+      
+      let FAR = fausseAlerte/(succes + fausseAlerte)
+      // let restFAR = 1 = FAR
+
+
+      console.log(values)
+      console.log(POD)
+      console.log(FAR)
+
+      makePie(values)
+
+
+
+
+      var podNumber = document.createElement("div")
+      podNumber.id = "podNumber"
+
+      var farNumber = document.createElement("div")
+      farNumber.id = "farNumber"
+
+
+      if (document.contains(document.getElementById("podNumber"))) {
+        document.getElementById("podNumber").remove();
+      }
+
+
+      if (document.contains(document.getElementById("farNumber"))) {
+        document.getElementById("farNumber").remove();
+      }
+
+
+      var csiNumber = document.createElement("div")
+      var biaisNumber = document.createElement("div")
+
+      podNumber.innerHTML = POD + "%"
+      farNumber.innerHTML = FAR + "%"
+
+
+      podSCN.appendChild(podNumber)
+      farSCN.appendChild(farNumber)
+    })
+  }
+
+
+
+
   goBtn.addEventListener('click', (event) => {
 
     /*
@@ -1120,231 +1399,30 @@ map.addLayer(layerMaps)
       });
 
     } else if (variableBtn.style["visibility"] == "hidden") {
-      console.log("VICTOIRE")
-
-      var analyseSCN = document.getElementById("analyseGraphs")
-      var columnLeft = document.getElementById("column-left")
-      var columnRight = document.getElementById("column-right")
-
-      var textRight = document.getElementById("text-right")
-      textRight.style["visibility"] = "visible" 
-
-      columnLeft.style["visibility"] = "visible"
-
-
-      var PODquestion = document.getElementById("PODquestion")
-      var FARquestion = document.getElementById("FARquestion")
-      var CSIquestion = document.getElementById("CSIquestion")
-      var BIAISquestion = document.getElementById("BIAISquestion")
-
-
-      var podSCN = document.getElementById("POD")
-      var farSCN = document.getElementById("FAR")
-      var csiSCN = document.getElementById("csi")
-      var biaisSCN = document.getElementById("biais")
-
-
-
-
-
-      /*
-      var PODoverlay = document.getElementById("PODoverlay")
-      var FARoverlay = document.getElementById("FARoverlay")
-      var CSIoverlay = document.getElementById("CSIoverlay")
-      var BIAISoverlay = document.getElementById("BIAISoverlay")
-
-*/
-
-
-      PODquestion.addEventListener("mouseover", (event) => {
-        console.log("FONE")
-
-        var PODoverlay = document.createElement("div")
-        PODoverlay.innerHTML = "HDHHDHDHD"
-        analyseSCN.appendChild(PODoverlay)
-      })
-
-
-      
-      FARquestion.addEventListener("mouseover", (event) => {
-        FARoverlay.style["visibility"] = "visible"
-      })
-
-      CSIquestion.addEventListener("mouseover", (event) => {
-        CSIoverlay.style["visibility"] = "visible"
-      })
-
-      BIAISquestion.addEventListener("mouseover", (event) => {
-        BIAISoverlay.style["visibility"] = "visible"
-      })
-
-
-
-
-
-      /*
-      var textRight = document.createElement("div")
-      textRight.innerHTML = 
-      "D: succès" + "<br>" +
-      "F: fausse alerte" + "<br>" +
-      "MA: manqué (aucun WW émis)" + "<br>" +
-      "MP0: manqué  ww émis trop tard" + "<br>" +
-      "Mpi: manqué préavis insuffisant" + "<br>" +
-      "MT: manqué timing" + "<br>" +
-      "MQ: manqué quantité" + "<br>" +
-      "U: Quasi succès" + "<br>" +
-      "i: ignoré (quasi événement ou VTH/VBN) "
-
-      columnRight.appendChild(textRight)
-      textRight.style["padding"] = "20px"
-
-
-
-      var buttonsContainer = document.createElement("div")
-      buttonsContainer.style["width"] = "10px"
-      
-      var buttonOneLeft = document.createElement("button")
-      buttonOneLeft.innerHTML = "POD"
-      var questionmark = document.createElement("p")
-      questionmark.innerHTML = "?"
-      var buttonTwoLeft = document.createElement("button")
-      buttonTwoLeft.innerHTML = "FAR"
-      var buttonThreeLeft = document.createElement("button")
-      buttonThreeLeft.innerHTML = "CSI"
-      var buttonFourLeft = document.createElement("button")
-      buttonFourLeft.innerHTML = "BIAIS"
-
-
-      buttonsContainer.appendChild(buttonOneLeft)
-      buttonsContainer.appendChild(questionmark)
-      buttonsContainer.appendChild(buttonTwoLeft)
-      buttonsContainer.appendChild(buttonThreeLeft)
-      buttonsContainer.appendChild(buttonFourLeft)
-
-      columnLeft.appendChild(buttonsContainer)
-
-*/
-
-
-      var canvasSCN = document.getElementById('column-canvas')
-      while (canvasSCN.firstChild) {
-        canvasSCN.removeChild(canvasSCN.firstChild);
-      }
-
-
-      var newCanvas = document.createElement('canvas');
-      newCanvas.id = 'analyseCanvas'
-      newCanvas.style["backgroundColor"] = "white"
-      newCanvas.style["margin"] = "auto"
-      newCanvas.style["display"] = "block"
-
-
-      newCanvas.style.width='100%';
-      newCanvas.style.height='95%';
-      //canvas.width  = canvas.offsetWidth;
-      //canvas.height = canvas.offsetHeight;
-
       
 
-      canvasSCN.appendChild(newCanvas)
 
+    var stValue = document.getElementById("selectSt").value
+    var variableSCD = document.getElementById("variableAdvSelector").value
 
-      var stValue = document.getElementById("selectSt").value
-      var variableSCD = document.getElementById("variableAdvSelector").value
-      var yearSCD = document.getElementById("yearSelector").value
-      var monthSCD = document.getElementById("monthOrPeriodSelector").value
-      var daySCD = document.getElementById("daySelector").value
-
-      var newCode = []
-      
+    var newCode = []
     
-      for (let i = 0; i < uniqueStNames.length; i++) {
-        if (stValue == uniqueStNames[i][0]) {
-          newCode = uniqueStNames[i][4]
-        }
+  
+    for (let i = 0; i < uniqueStNames.length; i++) {
+      if (stValue == uniqueStNames[i][0]) {
+        newCode = uniqueStNames[i][4]
       }
+    }
+   
 
-      newCode = newCode.slice(1);  // pour matcher avec les codes de la verif
-
-      // changer certains nom de stations dans le verif file pour que ça marche
-
-
-      var coteArray = retrieveAdvData(newCode, variableSCD)
-      console.log("DEUXIEME TEST")
-      console.log(coteArray)
-      coteArray
-      .then(values => {
-        console.log('valuestralala')
-        console.log(values)
-
-
-        let D = values[0]
-        let MQ = values[1]
-        let Mpi = values[2]
-        let MT = values[3]
-        let MA = values[4]
-        let MP0 = values[5]
-        let F = values[6]
-        let U = values[7]
-        let i = values[8]
-
-
-        console.log("BCBCCBBC")
-
-        let succes = D + MQ + Mpi + MT
-        let manque = MA + MP0
+    newCode = newCode.slice(1);  // pour matcher avec les codes de la verif
   
-        let POD = succes/(succes + manque)
-        // let restPOD = 1 - POD
-  
-        let fausseAlerte = F + U
-        
-        let FAR = fausseAlerte/(succes + fausseAlerte)
-        // let restFAR = 1 = FAR
+    // changer certains nom de stations dans le verif file pour que ça marche
 
 
-        console.log(values)
-        console.log(POD)
-        console.log(FAR)
-
-        makePie(values)
+    getWarningStat(newCode, variableSCD);
 
 
-
-
-        var podNumber = document.createElement("div")
-        podNumber.id = "podNumber"
-
-        var farNumber = document.createElement("div")
-        farNumber.id = "farNumber"
-
-
-        if (document.contains(document.getElementById("podNumber"))) {
-          document.getElementById("podNumber").remove();
-        }
-
-
-        if (document.contains(document.getElementById("farNumber"))) {
-          document.getElementById("farNumber").remove();
-        }
-
-
-        var csiNumber = document.createElement("div")
-        var biaisNumber = document.createElement("div")
-
-        podNumber.innerHTML = POD + "%"
-        farNumber.innerHTML = FAR + "%"
-
-
-        podSCN.appendChild(podNumber)
-        farSCN.appendChild(farNumber)
-
-
-
-
-
-        
-      })
     }
   });
 
@@ -1454,50 +1532,77 @@ map.on("singleclick", function(event) {
     console.log(advSection)
 
 
+    if (advSection == 'on' && geometLayers == 'off') {
+   
 
 
+    // Inserer une nouvelle fiche de selection lorsque j appuie sur le bouton adv et ici on fera var stValue = document.getElementById("selectSt").value sur cette nouvelle fiche de selection
+
+
+    var stValue = document.getElementById("selectSt").value
+    var variableSCD = document.getElementById("variableAdvSelector").value
+
+    var newCode = []
+    
   
+    for (let i = 0; i < uniqueStNames.length; i++) {
+      if (stValue == uniqueStNames[i][0]) {
+        newCode = uniqueStNames[i][4]
+      }
+    }
+   
 
+    newCode = newCode.slice(1);  // pour matcher avec les codes de la verif
+  
+    // changer certains nom de stations dans le verif file pour que ça marche
+
+
+    getWarningStat(newCode, variableSCD)
+
+
+    let newRgnName = []
+    let newRgnPerimeter = []
+    let newRgnArea = []
+    
+
+    for (i = 0; i<pzVariables.length; i++) {
+      if (feat.values_.NAME == pzVariables[i][0]) {
+        newRgnName += pzVariables[i][0]
+        newRgnPerimeter += pzVariables[i][1]
+        newRgnArea += pzVariables[i][2]
+      }
+    }
+    console.log(pzVariables)
+    console.log(newRgnArea)
+
+
+
+    document.getElementById("code").innerHTML = newRgnName
+    document.getElementById("lat").innerHTML = newRgnPerimeter
+    document.getElementById("lng").innerHTML = newRgnArea
+
+
+   
+ 
 
     if (regionSelected !== null) {
-    
       regionSelected.setStyle(undefined);
       regionSelected.disposed = false;
-
       regionSelected = null;
-      
     }
 
 
-    if (advSection == 'on') {
       feat.disposed = true 
       regionSelected = feat
       feat.setStyle(styleClicked);
       return true
 
-
-    } else if (advSection == 'off') {
-      console.log('TADAAAAAA')
-    }
-
-    console.log('regionSelectedregionSelected')
-    console.log(regionSelected.values_.NAME)
-
-/////////    ne fonctionne pas ////////
-    for (i = 0; i<pzVariables.length; i++) {
-      if (regionSelected.values_.NAME == pzVariables[i][0]) {
-        newRgnName += pzVariables[i][0]
-        newRgnPerimeter += pzVariables[i][1]
-        newRgnArea += pzVariables[i][2]
-      }
-     }
-
-     document.getElementById("code").innerHTML = newRgnName
-     document.getElementById("lat").innerHTML = newRgnPerimeter
-     document.getElementById("lng").innerHTML = newRgnArea
+    } 
 
 
-///////////////////////////
+
+
+    
 
 
   popupContainer.style["visibility"] = "visible"
@@ -1681,6 +1786,9 @@ geoMetBtn.addEventListener('click', (event) => {
 
   console.log(event)
 
+  console.log(geometLayers)
+
+
 
 
   
@@ -1698,9 +1806,7 @@ geoMetBtn.addEventListener('click', (event) => {
   selectLayer.style["visibility"] = "visible"
   timeSelector.style["visibility"] = "visible"
 
-  console.log("AGAAAIN")
 
-  console.log('haaaaaaaaa')
 
 
 
@@ -1709,19 +1815,18 @@ geoMetBtn.addEventListener('click', (event) => {
   layerMaps.getLayers().forEach(function(element, index, array) {
     let layerName = element.get("title");
     element.setVisible(layerName === selectLayer.value)
-    console.log(element)
   });
 
 
 
 selectLayer.addEventListener("change", (event) => {
-  console.log("CNAHGES")
+
 
 
   layerMaps.getLayers().forEach(function(element, index, array) {
     let layerName = element.get("title");
     element.setVisible(layerName === selectLayer.value)
-    console.log(element)
+   
   });
 })
 
@@ -1748,11 +1853,6 @@ selectLayer.addEventListener("change", (event) => {
   } else {
     currentTime = currentTime
   }
-  console.log('layerName')
-
-console.log(layerName)
-  console.log(currentTime)
-  console.log(element.getSource().getParams())
 
   updateLayers(element, currentTime);
 
@@ -1794,18 +1894,7 @@ layerMaps.getLayers().forEach(function(element, index, array) {
       let timestep = parseInt(timeStepString);
       let timeInZ = defautTime.toISOString().split('.')[0]+"Z"
 
-      console.log(preTimeStep)
-      console.log(timeStepString)
-      console.log(timestep)
-
-      console.log("DAAAAAAAAAAATE")
-      console.log(data)
-
-      console.log(startTime)
-      console.log(endTime)
-      console.log(preTimeStep)
-      console.log(defautTime)
-
+      
 
 
       var evoTime = new Date(data[0]);
@@ -1821,21 +1910,12 @@ layerMaps.getLayers().forEach(function(element, index, array) {
         if (el[i] == endTime.toISOString()) { break; }
       }
 
-      console.log("HELLS")
-
-      console.log(startTime)
-      console.log(evoTime)
-
-      console.log(el)
-
+  
       let le = []
       for (let x of el) {
         le.push(x.split('.')[0]+"Z")
       }
 
-      console.log(le)
-      console.log(defautTime)
-      console.log(timeInZ)
 
 
       let timeList = []
@@ -1849,12 +1929,6 @@ layerMaps.getLayers().forEach(function(element, index, array) {
         }
       }
 
-      console.log("thats GDPS_TT")
-      console.log(GDPS_TT)
-      console.log(currentTime)
-  
-
-      console.log(timeList)
 
 
       timeSelector.innerHTML = timeList
@@ -1874,16 +1948,8 @@ timeSelector.addEventListener('change', (event) => {
 
   let timeSelected = new Date(timeSelector.value) 
 
-  
-
-  console.log('timeSelected')
-  console.log(timeSelected)
-
   currentTime = timeSelected;
 
-  console.log(currentTime)
-
-  
   
   updateLayers(element, timeSelected);
   container.style["visibility"] = "hidden"
@@ -1910,10 +1976,7 @@ timeSelector.addEventListener('change', (event) => {
               let endTime = data[1];
               let preTimeStep = data[2];
               let defautTime = data[3];
-              console.log("front")
-              console.log(element)
-              console.log('layename')
-              console.log(layerName)
+         
               let timeStepString = preTimeStep.replace(/[^\d]/g,'');
               let timestep = parseInt(timeStepString);
 
@@ -1950,17 +2013,10 @@ timeSelector.addEventListener('change', (event) => {
               let endTime = data[1];
               let preTimeStep = data[2];
               let defautTime = data[3];
-              console.log("front")
-              console.log(element)
-              console.log('layename')
-              console.log(layerName)
+     
               let timeStepString = preTimeStep.replace(/[^\d]/g,'');
               let timestep = parseInt(timeStepString);
 
-
-              console.log('layers')
-              console.log(GDPS_HR)
-              console.log(GDPS_TT)
 
 
               if (currentTime == null) {
@@ -2012,32 +2068,25 @@ timeSelector.addEventListener('change', (event) => {
               let endTime = data[1];
               let preTimeStep = data[2];
               let defautTime = data[3];
-              console.log("front")
-              console.log(element)
-              console.log('layename')
-              console.log(layerName)
+
               let timeStepString = preTimeStep.replace(/[^\d]/g,'');
               let timestep = parseInt(timeStepString);
-
-        console.log("back")
-
-        console.log(element)
 
 
         if (currentTime == null) {
           currentTime = defautTime
-          console.log('null')
+       
         } else {
           currentTime = currentTime
         }
 
         if (currentTime > startTime) {
-        console.log("BACK")
+     
 
           currentTime = new Date(currentTime);
           currentTime.setHours(currentTime.getHours() - timestep);
           updateLayers(element, currentTime);
-          console.log(currentTime)
+        
           let currentTimeInZ = currentTime.toISOString().split('.')[0]+"Z"
 
               
@@ -2049,10 +2098,6 @@ timeSelector.addEventListener('change', (event) => {
 
         } else {
           currentTime = currentTime
-        console.log("else")
-        console.log(currentTime)
-        console.log(startTime)
-
         }
 
 
@@ -2078,10 +2123,7 @@ timeSelector.addEventListener('change', (event) => {
               let endTime = data[1];
               let preTimeStep = data[2];
               let defautTime = data[3];
-              console.log("front")
-              console.log(element)
-              console.log('layename')
-              console.log(layerName)
+       
               let timeStepString = preTimeStep.replace(/[^\d]/g,'');
               let timestep = parseInt(timeStepString);
 
@@ -2113,13 +2155,9 @@ timeSelector.addEventListener('change', (event) => {
      // console.log("TIIIME")
 
 
-console.log('1')
-console.log(geometLayers)
-
 geometLayers = 'on'
 
-console.log('2')
-console.log(geometLayers)
+
 
 
 

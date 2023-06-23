@@ -562,16 +562,7 @@ function retrieveAdvData(stName, wx) {
       MQ = MQ || 0
       U = U || 0
       i = i || 0 
-
-
-      let succes = D + MQ + Mpi + MT
-      let manque = MA + MP0
-
-      let POD = succes/(succes + manque)
-
-      let fausseAlerte = F + U
       
-      let FAR = fausseAlerte/(succes + fausseAlerte)
 
 
       let coteArray = [D, MQ, Mpi, MT, MA, MP0, F, U, i]
