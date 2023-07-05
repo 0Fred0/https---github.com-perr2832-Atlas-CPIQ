@@ -102,12 +102,72 @@ let clickedRegion = function(feature, resolution){  // n'est normalement plus ut
 
 let markerLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
-    url: './data/stations.json',
+    url: './data/station_list.json',
     format: new ol.format.GeoJSON() 
   }),
   zIndex: 2,
   title: 'markerLayer',
   style: function(feature, resolution){
+    
+    var orange = new ol.style.Style({
+    image: new ol.style.Circle({
+        radius: 2,
+        fill: new ol.style.Fill({
+            color: 'orange'
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'black'
+        })
+      })
+    }) 
+
+
+
+    var blue = new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 4,
+        fill: new ol.style.Fill({
+          color: 'blue'
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'black'
+        })
+      })
+    })
+
+    var green = new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 4,
+        fill: new ol.style.Fill({
+          color: 'green'
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'black'
+        })
+      })
+    })
+
+
+
+
+
+
+
+
+    if (feature.get("LastYear") == 2023) {
+      return [blue]
+    } else if (feature.get("LastYear") >= 2000) {
+      return [green]
+    } else {
+      return [orange]
+    }
+
+
+  }
+  
+  
+  /*
+  function(feature, resolution){
 
 
     var nonactive = new ol.style.Style({
@@ -269,6 +329,8 @@ let markerLayer = new ol.layer.Vector({
       return [beige]
     }
 }
+
+*/
 })
 
 
@@ -326,96 +388,34 @@ map.addLayer(layerMaps)
 
 
 
-/**
- * Créer un élément "Overlay" pour ancrer la fenêtre contextuelle sur la carte
- */
+    const stations = fetch("data/stations2.json").then(res => res.json())
+    const publicZones = fetch("data/public_zones.json").then(res => res.json())
+    const stationList = fetch("data/station_list.json").then(res => res.json())
 
 
 
-/**
-
- */
+    Promise.all([stations, publicZones, stationList]).then(values => {
 
 
 
+      let stationFeat = values[2].features
+      let stationVariables = []
 
 
-    fetch("data/stations2.json")
-       .then(response => response.json())
-       .then(data => {
-
-     
-
-       var way = data.features
-   
-       var allVariables = []
-       var stNames = []  // normalement inutile
-       var stActivity = []  // normalement inutile
-
-    
-
-
-       for (var i = 0; i < way.length; i++ ) {
-        allVariables.push([way[i].properties.name, way[i].properties.provider, way[i].geometry.coordinates[0], way[i].geometry.coordinates[1], way[i].properties.code.TC, way[i].properties.firstyearofactivity, way[i].properties.lastyearofactivity])
-        stNames.push(way[i].properties.name)  // normalement inutile
-
-        stActivity.push(way[i].properties.active)  // normalement inutile
-       }
-
-      
-/*     ////// pour un tableau 1D //////
-       function onlyUnique(value, index, array) {
-        return array.indexOf(value) === index;
+      for (let i = 0; i < stationFeat.length; i++) {
+        stationVariables.push([stationFeat[i].properties.StationName, stationFeat[i].properties.Province, stationFeat[i].properties.ClimateID, stationFeat[i].properties.TCIdentifier, stationFeat[i].geometry.coordinates[0], stationFeat[i].geometry.coordinates[1], stationFeat[i].properties.FirstYear, stationFeat[i].properties.LastYear, stationFeat[i].properties.Elevation])
       }
 
-*/  
 
-      ////// pour un tableau mulit-D auquel on enleve les nom qui se repete (on ne garde que les valeurs uniques //////
-      const res = allVariables.reduce((a, c) => {
-        if (!a.find(v => v[0] === c[0])) {
-          a.push(c);
-        }
-        return a;
-      }, []);
+      let quebecStations = stationVariables.filter((x) => x[1] == 'QUEBEC')
 
-
- 
-
-      //var resr = allVariables.filter(onlyUnique);
-      //var oneStNames = stNames.filter(onlyUnique);
-  
+      console.log('LKLLLLLLLLL')
+      console.log(quebecStations)
       
 
-      
-     
-    
-      var airportStNames = []
-      var nonairportStNames = []
-
-      for (let i=0; i<res.length; i++) {
-        if (res[i][0][0] == "✈") {
-          airportStNames.push([res[i][0].slice(2) + " ✈", res[i][1], res[i][2], res[i][3], res[i][4], res[i][5], res[i][6]])
-        } else {
-          nonairportStNames.push([res[i][0],res[i][1],res[i][2],res[i][3], res[i][4], res[i][5], res[i][6]])
-        }
-        
-      }
-      //airportStNames = airportStNames.split(",")
-      //nonairportStNames = nonairportStNames.split(",")
-
-      //airportStNames = airportStNames.splice(0, airportStNames.length-1);
-      //nonairportStNames = nonairportStNames.splice(0, nonairportStNames.length-1);
+      // stationVariables = stationVariables.flat()
 
 
-
-      
-
-
-      var uniqueStNames = airportStNames.concat(nonairportStNames);
-      console.log('UNIIIIIIIIIQUE')
-      console.log(uniqueStNames)
-      
-      // Classement par ordre alphabétique // 
       function sortFunction(a, b) {
         if (a[0] === b[0]) {
             return 0;
@@ -426,22 +426,16 @@ map.addLayer(layerMaps)
       }
 
 
-      uniqueStNames.sort(sortFunction)
-   
+      quebecStations.sort(sortFunction)
 
 
 
-      //uniqueStNames = uniqueStNames.sort();
 
-     
-
-      
-      
-    
+          
       var stNamesOptions = ""
 
-      for (let x of uniqueStNames) {
-        if (x[0] == "Montréal - P.-E.-Trudeau ✈") {
+      for (let x of quebecStations) {
+        if (x[0] == "MONTREAL INTL A") {
           stNamesOptions += "<option selected=\"selected\"> " + x[0] + " </option>" + ","
         } else {
           stNamesOptions += "<option> " + x[0] + " </option>" + ","
@@ -462,36 +456,9 @@ map.addLayer(layerMaps)
 
 
 
-              /* 
-        ************
-        1. POUR L'OUVERTURE DE PAGE,
-        ALLEZ CHERCHER DANS LE FICHIER LES INFOS SUR CYUL (BELLE MANIERE)
-        MAIS ÇA DEMANDE D'OUVRIR LES FICHIERS DONC CERTAINEMENT PLUS DE CHARGEMENT
-        ************
 
-          fetch("data/stations2.json")
-            .then(response => response.json())
-            .then(data => {
-            console.log(data)
-            var way = data.features
-            console.log(way.length)
-            var cyulInfo = []
-            for (var i = 0; i < way.length; i++ ) {
-              if (way[i].properties.code.TC == "CYUL") {
-              cyulInfo.push(way[i])
-              } 
-              
-            } 
-            
-            console.log(cyulInfo)
-            var cyulCoordinate = cyulInfo[1].geometry.coordinates;
-            var cyullat = cyulCoordinate[0];
-            var cyullon = cyulCoordinate[1];
-            var cyulCode = cyulInfo[1].properties.code.TC
-            var cyulProvider = cyulInfo[1].properties.provider
+ 
 
-            });
-      */
 
       // SI JE MET LA LIGNE stValue=...ici, et que je met stValue en variable pour la fonction, l'action 'change' ne fonctionne plus. Voir sur Internet pourquoi par curiosité
       function newInfo() {
@@ -505,34 +472,41 @@ map.addLayer(layerMaps)
           var newLng = []
           var newLat = []
           var newCode = []
+          var newFirstYear = []
+          var newLastYear = []
+          
+          var newAlt = []
 
-          for (let i = 0; i < uniqueStNames.length; i++) {
-            if (stValue == uniqueStNames[i][0]) {
-              var newNetwork = uniqueStNames[i][1]
-              var newLng = uniqueStNames[i][2]
-              var newLat = uniqueStNames[i][3]
-              var newCode = uniqueStNames[i][4]
+          for (let i = 0; i < quebecStations.length; i++) {
+            if (stValue == quebecStations[i][0]) {
+              var newClimateID = quebecStations[i][2]
+              var newTCIdentifier = quebecStations[i][3]
+              var newLng = quebecStations[i][4]
+              var newLat = quebecStations[i][5]
+              var newFirstYear = quebecStations[i][6]
+              var newLastYear = quebecStations[i][7]
+              var newAlt = quebecStations[i][8]
+
             }
           }
-          console.log('NEEEWWWWWWS000000')
-          console.log(advSection)
-
-          console.log(newLng)
-          console.log(newLat)
+       
           map.getView().setCenter(ol.proj.transform([newLng, newLat], 'EPSG:4326', 'EPSG:3857'));
 
 
           document.getElementById("lat").innerHTML = newLat
           document.getElementById("lng").innerHTML = newLng
-          document.getElementById("ntw").innerHTML = newNetwork
-          if (newCode == '') {
+          document.getElementById("ntw").innerHTML = newClimateID
+          if (newCode == "") {
           document.getElementById("code").innerHTML = '/'
           } else {
-          document.getElementById("code").innerHTML = newCode
+          document.getElementById("code").innerHTML = newTCIdentifier
           }
-
-
+          document.getElementById("alt").innerHTML = newAlt
+          
+          
+          
           makeWindGraph(stValue);
+          document.getElementById("active").innerHTML = newFirstYear + '-' + newLastYear
 
 
           return newLat, newLng, newNetwork, newCode
@@ -579,33 +553,33 @@ map.addLayer(layerMaps)
 
     function makeWindGraph (stValue) {
 
-      let windSpeedVariable = 'Spd of Max Gust (km/h)';
-      let windDirectionVariable = 'Dir of Max Gust (10s deg)';
+      let windSpeedVariable = 'SPEED_MAX_GUST';
+      let windDirectionVariable = 'DIRECTION_MAX_GUST';
 
-      let dayVariable = 'Day'
-      let monthVariable = 'Month'
-      let yearVariable = 'Year'
+      let dayVariable = 'LOCAL_DAY'
+      let monthVariable = 'LOCAL_MONTH'
+      let yearVariable = 'LOCAL_YEAR'
 
 
       var period = ['allyears','allmonths','alldays'];
 
 
-      var newCode = []
+      var newTCIdentifier = []
       var firstYear = []
       var lastYear = []
       
-      for (let i = 0; i < uniqueStNames.length; i++) {
-        if (stValue == uniqueStNames[i][0]) {
-          newCode = uniqueStNames[i][4]
-          firstYear = uniqueStNames[i][5]
-          lastYear = uniqueStNames[i][6]
+      for (let i = 0; i < quebecStations.length; i++) {
+        if (stValue == quebecStations[i][0]) {
+          newTCIdentifier = quebecStations[i][2]
+          firstYear = quebecStations[i][6]
+          lastYear = quebecStations[i][7]
         }
       }
-      var dirPromise = retrieveData(newCode, windDirectionVariable, firstYear, lastYear)
-      var spdPromise = retrieveData(newCode, windSpeedVariable, firstYear, lastYear)    
-      var yearPromise = retrieveData(newCode, yearVariable, firstYear, lastYear)
-      var monthPromise = retrieveData(newCode, monthVariable, firstYear, lastYear)
-      var dayPromise = retrieveData(newCode, dayVariable, firstYear, lastYear)
+      var dirPromise = retrieveData(newTCIdentifier, windDirectionVariable, firstYear, lastYear)
+      var spdPromise = retrieveData(newTCIdentifier, windSpeedVariable, firstYear, lastYear)    
+      var yearPromise = retrieveData(newTCIdentifier, yearVariable, firstYear, lastYear)
+      var monthPromise = retrieveData(newTCIdentifier, monthVariable, firstYear, lastYear)
+      var dayPromise = retrieveData(newTCIdentifier, dayVariable, firstYear, lastYear)
    
 
 
@@ -781,14 +755,9 @@ map.addLayer(layerMaps)
 
 
 
+   // values[1] est ici public_zones
 
-  fetch("data/public_zones.json")
-  .then(response => response.json())
-  .then(data => {
-
-
-
-   var pzFeatures = data.features
+   var pzFeatures = values[1].features
 
    var pzVariables = []
 
@@ -803,7 +772,7 @@ map.addLayer(layerMaps)
 
 
 
-  let advSection = 'off'
+  advSection = 'off'
 
 
   advBtn.addEventListener("click", (event) => {
@@ -1025,12 +994,46 @@ map.addLayer(layerMaps)
 
 
 
+
+  let stationPopupContainer = document.getElementById('stationspopup')
+  let stationContent = document.getElementById('stationspopup-content')
+
+
   let selected = null;
 
   map.on('pointermove', function (event){
     
+    if (advSection == 'off') {
 
-    if (advSection == 'on') {
+
+      let stationsOverlay = new ol.Overlay({
+        element: stationPopupContainer,
+        autoPan: false,
+        autoPanAnimation: {
+          duration: 250
+        }
+      });
+      
+    
+      map.addOverlay(stationsOverlay)
+
+
+
+      map.forEachFeatureAtPixel(event.pixel, function (feat, layer) {
+        if (layer == markerLayer) {
+          console.log(feat)
+
+          stationsOverlay.setPosition(event.coordinate)
+
+          stationContent.innerHTML = feat.values_.StationName
+        }
+      })
+
+
+
+      //console.log(event)
+
+    } else if (advSection == 'on') {
 
 
 
@@ -1115,15 +1118,15 @@ map.addLayer(layerMaps)
   var stValue = document.getElementById("selectSt").value
 
 
-  var newCode = []
+  var newTCIdentifier = []
   var firstYear = []
   var lastYear = []
   
-  for (let i = 0; i < uniqueStNames.length; i++) {
-    if (stValue == uniqueStNames[i][0]) {
-      newCode = uniqueStNames[i][4]
-      firstYear = uniqueStNames[i][5]
-      lastYear = uniqueStNames[i][6]
+  for (let i = 0; i < quebecStations.length; i++) {
+    if (stValue == quebecStations[i][0]) {
+      newTCIdentifier = quebecStations[i][2]
+      firstYear = quebecStations[i][6]
+      lastYear = quebecStations[i][7]
     }
   }
 
@@ -1468,33 +1471,23 @@ map.on("singleclick", function(event) {
     if (layer.values_.title == 'markerLayer') {
 
     
-    let stationName = feat.values_.name;
-    console.log(feat)
-    console.log('stationName')
-
-    console.log(stationName)
-
-  
-
-
-    var StNameModified = "" 
-
-    if (stationName[0] == "✈") {
-      StNameModified = stationName.slice(2) + " ✈"
-    } else {
-      StNameModified = stationName
-    }
+    let stationName = feat.values_.StationName;
  
+
 
     var changeSelect = ""
 
-    for (let x of uniqueStNames) {
-      if (x[0] == StNameModified) {
+    for (let x of quebecStations) {
+      if (x[0] == stationName) {
         changeSelect += "<option selected=\"selected\"> " + x[0] + " </option>" + ","
-        var newNetwork = x[1]
-        var newLng = x[2]
-        var newLat = x[3]
-        var newCode = x[4]
+        var newClimateID = x[2]
+        var newTCIdentifier = x[3]
+        var newLng = x[4]
+        var newLat = x[5]
+        var newFirstYear = x[6]
+        var newLastYear = x[7]
+        var newAlt = x[8]
+
         
         
       } else {
@@ -1511,20 +1504,20 @@ map.on("singleclick", function(event) {
     document.getElementById("selectSt").innerHTML = changeSelect;
     document.getElementById("lat").innerHTML = newLat
     document.getElementById("lng").innerHTML = newLng
-    document.getElementById("ntw").innerHTML = newNetwork
+    document.getElementById("ntw").innerHTML = newClimateID
+    document.getElementById("alt").innerHTML = newAlt
+
     if (newCode == '') {
       document.getElementById("code").innerHTML = '/'
     } else {
-      document.getElementById("code").innerHTML = newCode
+      document.getElementById("code").innerHTML = newTCIdentifier
     }
+    document.getElementById("active").innerHTML = newFirstYear + '-' + newLastYear
 
 
 
-    console.log("ETDE1")
-    console.log(StNameModified)
 
-
-    makeWindGraph(StNameModified);
+    makeWindGraph(stationName);
 
 
   } else if (layer.values_.title == 'regionLayer') {   // essayer avec if (layer == regionLayer)
@@ -2203,12 +2196,8 @@ asyncCall();
 //let { array_WX, array_Fin, array_Date, array_rgn, array_WX2, array_Cote, array_Vigie, array_Source, array_Fin2, array_texte, array_Faible, array_Cote2, array_WOCN, array_Dateconvertie, array_Critereatteint, array_Debut, array_Debut2, array_Details, array_Extreme, array_Moderee, array_Preavis, array_Region, array_Termine, array_Elevee, array_Emis, array_Evenementsdetail, array_ImpactsCommentaires, arrayNiveaudImpact, array_WXconvertie, array_WXconvImpacts } = getVerif(verifFile)
 
 
-})
-});
-
-
 
 //statVerif(array_WX)
 
 
-
+});

@@ -388,55 +388,28 @@ function stepBackward(modelVariable) {
 
 
 
-function retrieveData(stationID, variable, firstYear, lastYear) {
+function retrieveData(stationID, variable, startYear, endYear) {
   return new Promise(function (resolve, reject) {
 
   
-  //let monthOrPeriod = event.target.id;
-  
-  
-  // Construct array of path to data files
-  let yeardifference = lastYear - firstYear
-  yeardifference = yeardifference + 1
+  var foo = [];
 
- 
-  
-  //let startYear = 2002 //Correspond to oldest year of data files
-  
-  //let myString = myString.replace(/\D/g,'');
-  let allYears = Array.from(Array(yeardifference).keys())
-
-  let period = []
- 
-
-  for (var i = 0; i < allYears.length; i++) {
-      period += Number(allYears[i]) + Number(firstYear) + ","
+  for (var i = startYear; i <= endYear; i++) {
+      foo.push(i);
   }
  
-  
-  // Create array of strings
-  period = period.split(",")
-  period = period.splice(0, period.length-1); // Remove the last empty item due to "," in the for loop
-
-  
-  // Create array of numbers
-  period = period.map(str => {
-      return Number(str);
-  })
-  
-  
   
   let urls = []
-  for (var i = 0; i < period.length; i++) {
-    urls += `./data/meteo/${stationID}/${stationID} ${period[i]}_EN.json` + ','
+  for (var i = 0; i < foo.length; i++) {
+    urls += `https://api.weather.gc.ca/collections/climate-daily/items?f=json&CLIMATE_IDENTIFIER=${stationID}&LOCAL_YEAR=${foo[i]}` + ','
   }
 
-  // utiliser NODE.JS/ require pour acceder aux fichiers
- 
 
   
   urls = urls.split(",")
   urls = urls.splice(0, urls.length-1);
+
+
 
   
   
@@ -448,53 +421,51 @@ function retrieveData(stationID, variable, firstYear, lastYear) {
       )
   
   ).then(data => {
-      let loadedData = data.flat();
-  
-  
-  
-  // Test pour mettre la recherche d'une variable dans une fonction //
-    
-  
-      let dataArray = []
-      for (let x of loadedData) {
-        dataArray += x[variable] + "," 
-      }
-      dataArray = dataArray.split(",")
-      dataArray = dataArray.splice(0, dataArray.length-1);
+
+    console.log('unshow') 
+    console.log(data)
 
 
 
-      function getAllIndexes(arr, val) {
-        var dataIndexes = [], i;
-        for(var i = 0; i < arr.length; i++)
-            if (arr[i] === val)
-            dataIndexes.push(i);
-        return dataIndexes;
+
+     // let loadedData = data.flat();
+
+      // console.log(loadedData)
+
+      let feat = []
+
+    //  console.log(typeof loadedData)
+     // console.log(loadedData)
+
+      for (let x of data) {
+        feat.push(x.features)
       }
 
+      feat = feat.flat()
 
 
+      let variableData = []
 
-      var dataIndexes = getAllIndexes(dataArray, "");
-    
-      function insertNaN(item, index) {
-        if (item !== -1) {
-          dataArray[item] = NaN;
-        }
+      for (let x of feat) {
+        variableData.push(x.properties[variable])
       }
-      dataIndexes.forEach(insertNaN);
 
-      dataArray = dataArray.map(str => {
-        return Number(str);
-      });
+      console.log('SHOWW')
+
+  
+  
+      console.log(variableData)
 
      
-      resolve(dataArray)
+      resolve(variableData)
       reject("error")
     });
 
   });
 };
+  
+
+
 
 
 
@@ -599,7 +570,7 @@ function retrieveAdvData(stName, wx) {
     
 
 
-      if (isNaN(Number(periodSelected[0]))) {
+      if (isNaN(Number(periodSelected[0]))) {               // pas besoin de mettre && periodSelected[0]=='allyears' puisque les autres options ne sont que des nombres
         periodDataArray = periodDataArray
       } 
       else {
