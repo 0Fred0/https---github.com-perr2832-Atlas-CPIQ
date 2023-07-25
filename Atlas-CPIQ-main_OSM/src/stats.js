@@ -196,7 +196,7 @@ function makeGraphic(allData) {
   const data = {
       labels: labels,
       datasets: [{
-          label: "temp",
+          label: "valeur",
           backgroundColor: 'rgb(255, 0, 0)',
           borderColor: 'rgb(255, 0, 0)',
           data: allData,
@@ -228,7 +228,7 @@ function makePie(dataArray) {
 
 
   const data = {
-      labels: ['D', 'MF', 'Mpi', 'MT', 'MA', 'Mp0', 'F', 'U', 'i'],
+      labels: ['D', 'MF', 'Mpi', 'MT', 'MA', 'Mp0', 'F', 'U', 'i','W'],
       datasets: [{
           label: "temp",
           backgroundColor: [
@@ -240,7 +240,7 @@ function makePie(dataArray) {
             'rgb(240, 0, 0)',
             'rgb(0, 200, 0)',
             'rgb(0, 240, 0)',
-            'rgb(200, 200, 200)',
+            'rgb(200, 200, 200)',       // en ajouter une pour W
           ],
           data: dataArray,   
           datalabels: {
@@ -422,8 +422,6 @@ function retrieveData(stationID, variable, startYear, endYear) {
   
   ).then(data => {
 
-    console.log('unshow') 
-    console.log(data)
 
 
 
@@ -450,12 +448,6 @@ function retrieveData(stationID, variable, startYear, endYear) {
         variableData.push(x.properties[variable])
       }
 
-      console.log('SHOWW')
-
-  
-  
-      console.log(variableData)
-
      
       resolve(variableData)
       reject("error")
@@ -470,13 +462,114 @@ function retrieveData(stationID, variable, startYear, endYear) {
 
 
 
-function retrieveAdvData(stName, wx) {
+function retrieveAdvData(rgnName, wx) {
   return new Promise(function (resolve, reject){
 
     fetch("data/warning/alldata.json")
     .then(response => response.json())
     .then(data => {
-      console.log("dataaaaaaaaaaaaaaaaaaaa")
+
+
+ 
+
+      for (let x of data) {
+        if (x['rgn'] == 'YGL') {
+          x['Nom région'] = 'baie James et rivière La Grande'
+        } else if (x['rgn'] == 'HYA') {
+          x['Nom région'] = 'Quaqtaq'
+        } else if (x['rgn'] == 'WBZ') {
+          x['Nom région'] = 'Vaudreuil - Soulanges - Huntingdon'
+        } else if (x['rgn'] == 'WUL' || x['rgn'] == 'YUL') {
+          x['Nom région'] = 'Montréal métropolitain - Laval'
+        } else if (x['rgn'] == 'YSC') {
+          x['Nom région'] = 'Estrie'
+        } else if (x['rgn'] == 'YMX') {
+          x['Nom région'] = 'Lachute - Saint-Jérôme'
+        } else if (x['rgn'] == 'WHV') {
+          x['Nom région'] = 'Beauce'
+        } else if (x['rgn'] == 'WNQ') {
+          x['Nom région'] = 'Drummondville - Bois-Francs'
+        } else if (x['rgn'] == 'WJT') {
+          x['Nom région'] = 'Laurentides'
+        } else if (x['rgn'] == 'YWA') {
+          x['Nom région'] = 'Pontiac'
+        } else if (x['rgn'] == 'WTY') {
+          x['Nom région'] = 'Mauricie'
+        } else if (x['rgn'] == 'YQB ' || x['rgn'] == 'WQB') {
+          x['Nom région'] = 'Québec'
+        } else if (x['rgn'] == 'WPD') {
+          x['Nom région'] = 'rÃ©serve faunique des Laurentides'
+        } else if (x['rgn'] == 'WDQ') {
+          x['Nom région'] = 'La Tuque'
+        } else if (x['rgn'] == 'WIS') {
+          x['Nom région'] = 'Charlevoix'
+        } else if (x['rgn'] == 'WMJ') {
+          x['Nom région'] = 'Haute-Gatineau - Lièvre - Papineau'
+        } else if (x['rgn'] == 'WST') {
+          x['Nom région'] = 'Montmagny - L\'Islet'
+        } else if (x['rgn'] == 'WNH') {
+          x['Nom région'] = 'Kamouraska - Rivière-du-Loup - Trois-Pistoles'
+        } else if (x['rgn'] == 'YBG') {
+          x['Nom région'] = 'Saguenay'
+        } else if (x['rgn'] == 'WSG') {
+          x['Nom région'] = 'Matane'
+        } else if (x['rgn'] == 'YRJ') {
+          x['Nom région'] = 'Lac-Saint-Jean'
+        } else if (x['rgn'] == 'YYY') {
+          x['Nom région'] = 'Rimouski - Mont-Joli'
+        } else if (x['rgn'] == 'WOC') {
+          x['Nom région'] = 'New Carlisle - Chandler'
+        } else if (x['rgn'] == 'WZS') {
+          x['Nom région'] = 'Amqui - vallée de la Matapédia'
+        } else if (x['rgn'] == 'YCL') {
+          x['Nom région'] = 'Restigouche - Bonaventure'
+        } else if (x['rgn'] == 'YBC') {
+          x['Nom région'] = 'Baie-Comeau'
+        } else if (x['rgn'] == 'YGP') {
+          x['Nom région'] = 'parc national de Forillon - Gaspé - Percé'
+        } else if (x['rgn'] == 'WBY' || x['rgn'] == 'wby') {
+          x['Nom région'] = 'Anticosti'
+        } else if (x['rgn'] == 'YZV') {
+          x['Nom région'] = 'Sept-Îles - Port-Cartier'
+        } else if (x['rgn'] == 'YGV') {
+          x['Nom région'] = 'Minganie'
+        } else if (x['rgn'] == 'YNA') {
+          x['Nom région'] = 'Natashquan'
+        } else if (x['rgn'] == 'WDM') {
+          x['Nom région'] = 'Chevery'
+        } else if (x['rgn'] == 'YAH') {
+          x['Nom région'] = 'LG Quatre - Laforge et Fontanges'
+        } else if (x['rgn'] == 'YKQ' || x['rgn'] == 'WKQ') {
+          x['Nom région'] = 'Waskaganish'
+        } else if (x['rgn'] == 'YBX') {
+          x['Nom région'] = 'Blanc-Sablon'
+        } else if (x['rgn'] == 'YMT') {
+          x['Nom région'] = 'Chibougamau'
+        } else if (x['rgn'] == 'YWK') {
+          x['Nom région'] = 'Fermont'
+        } else if (x['rgn'] == 'YVO') {
+          x['Nom région'] = 'Abitibi'
+        } else if (x['rgn'] == 'WPK') {
+          x['Nom région'] = 'Parent - réservoir Gouin'
+        } else if (x['rgn'] == 'WBA') {
+          x['Nom région'] = 'Témiscamingue'
+        } else if (x['rgn'] == 'YKL') {
+          x['Nom région'] = 'Schefferville'
+        } else if (x['rgn'] == 'YNM') {
+          x['Nom région'] = 'Matagami'
+        } else if (x['rgn'] == 'YVP') {
+          x['Nom région'] = 'Kuujjuaq'
+        } else if (x['rgn'] == 'WIZ') {
+          x['Nom région'] = 'vallée du Richelieu - Saint-Hyacinthe'
+        } else if (x['rgn'] == 'WSF') {
+          x['Nom région'] = 'Sainte-Anne-des-Monts - Grande-Vallée'
+        } else if (x['rgn'] == 'WEW') {
+          x['Nom région'] = 'Lanaudière'
+        }                        
+      }
+
+
+      console.log('second step')
       console.log(data)
 
  
@@ -484,7 +577,7 @@ function retrieveAdvData(stName, wx) {
 
       let dataPerSt = []
       for (let x of data) {
-        if (x['rgn'] == stName) {
+        if (x['Nom région'] == rgnName) {
           dataPerSt.push(x)
         }
       }
@@ -494,7 +587,7 @@ function retrieveAdvData(stName, wx) {
 
       let wxArray = []
       for (let x of dataPerSt) {
-        if (x['WX'] == wx) {
+        if (x['WX2'] == wx) {
           wxArray.push(x)
         } 
       }
@@ -512,17 +605,21 @@ function retrieveAdvData(stName, wx) {
         counts[num] = counts[num] ? counts[num] + 1 : 1;
       }
 
-      console.log(counts)
+
+      // il manque encore MF...
 
       let D = counts['D']
       let F = counts['F']
       let MA = counts['MA']
-      let MP0 = counts['MP0']
+      let MP0 = counts['MP0'] + counts['Mp0']
       let Mpi = counts['Mpi']
       let MT = counts['MT']
       let MQ = counts['MQ']
       let U = counts['U']
       let i = counts['i']
+      let W = counts['W']
+
+      
 
       D = D || 0
       F = F || 0
@@ -533,18 +630,15 @@ function retrieveAdvData(stName, wx) {
       MQ = MQ || 0
       U = U || 0
       i = i || 0 
+      W = W || 0 
+
       
 
 
-      let coteArray = [D, MQ, Mpi, MT, MA, MP0, F, U, i]
+      let coteArray = [D, MQ, Mpi, MT, MA, MP0, F, U, i, W]
 
 
 
-      console.log('PREMIER TEST')
-      console.log(coteArray)
-
-
-     
       resolve(coteArray)
       reject("error")
 
@@ -577,13 +671,7 @@ function retrieveAdvData(stName, wx) {
         periodDataArray = periodDataArray.filter((x) => x[0] === Number(periodSelected[0]));
       }
 
-
-      console.log('yearSelected')
-      console.log(periodDataArray)
-
   
-
-
 
       if (isNaN(Number(periodSelected[1])) && periodSelected[1]=='allmonths') {
         periodDataArray = periodDataArray
@@ -617,13 +705,6 @@ function retrieveAdvData(stName, wx) {
 
 
 
-
-      console.log('monthSelected')
-      console.log(periodDataArray)
-
-
-
-
       if (isNaN(Number(periodSelected[2]))) {
         periodDataArray = periodDataArray
       } 
@@ -634,15 +715,23 @@ function retrieveAdvData(stName, wx) {
      
 
 
+      periodDataArray.sort(function(a, b) {
+        return a[0] - b[0];
+      });
 
-      console.log('daySelected')
-      console.log(periodDataArray)
+      periodDataArray.sort(function(a, b) {
+        return a[1] - b[1];
+      });
+
+
+      periodDataArray.sort(function(a, b) {
+        return a[2] - b[2];
+      });
+
 
 
       periodDataArray = periodDataArray.map(x => x[3]);
 
-      console.log('finalArray')
-      console.log(periodDataArray)
 
 
       return periodDataArray
@@ -941,6 +1030,136 @@ function retrieveAdvData(stName, wx) {
 
 
 
+    function addRGN () {
+
+      fetch("data/warning/alldata.json")
+    .then(response => response.json())
+    .then(data => {
+
+      var diff = []
+
+      for (let x of data) {
+        diff.push(x['rgn'])
+      }
+
+
+      function onlyUnique(value, index, array) {
+        return array.indexOf(value) === index;
+      }
+
+      var unique = diff.filter(onlyUnique);
+
+      console.log(unique)
+
+
+      //  Il faudra encore ajouter LAN, TRM, DEG, LAU, ESC, MAT, MUR, ZMV, DOR
+
+      for (let x of data) {
+        if (x['rgn'] == 'YGL') {
+          x['Nom région'] = 'baie James et rivière La Grande'
+        } else if (x['rgn'] == 'HYA') {
+          x['Nom région'] = 'Quaqtaq'
+        } else if (x['rgn'] == 'WBZ') {
+          x['Nom région'] = 'Vaudreuil - Soulanges - Huntingdon'
+        } else if (x['rgn'] == 'WUL' || x['rgn'] == 'YUL') {
+          x['Nom région'] = 'Montréal métropolitain - Laval'
+        } else if (x['rgn'] == 'YSC') {
+          x['Nom région'] = 'Estrie'
+        } else if (x['rgn'] == 'YMX') {
+          x['Nom région'] = 'Lachute - Saint-Jérôme'
+        } else if (x['rgn'] == 'WHV') {
+          x['Nom région'] = 'Beauce'
+        } else if (x['rgn'] == 'WNQ') {
+          x['Nom région'] = 'Drummondville - Bois-Francs'
+        } else if (x['rgn'] == 'WJT') {
+          x['Nom région'] = 'Laurentides'
+        } else if (x['rgn'] == 'YWA') {
+          x['Nom région'] = 'Pontiac'
+        } else if (x['rgn'] == 'WTY') {
+          x['Nom région'] = 'Mauricie'
+        } else if (x['rgn'] == 'YQB ' || x['rgn'] == 'WQB') {
+          x['Nom région'] = 'Québec'
+        } else if (x['rgn'] == 'WPD') {
+          x['Nom région'] = 'rÃ©serve faunique des Laurentides'
+        } else if (x['rgn'] == 'WDQ') {
+          x['Nom région'] = 'La Tuque'
+        } else if (x['rgn'] == 'WIS') {
+          x['Nom région'] = 'Charlevoix'
+        } else if (x['rgn'] == 'WMJ') {
+          x['Nom région'] = 'Haute-Gatineau - Lièvre - Papineau'
+        } else if (x['rgn'] == 'WST') {
+          x['Nom région'] = 'Montmagny - L\'Islet'
+        } else if (x['rgn'] == 'WNH') {
+          x['Nom région'] = 'Kamouraska - Rivière-du-Loup - Trois-Pistoles'
+        } else if (x['rgn'] == 'YBG') {
+          x['Nom région'] = 'Saguenay'
+        } else if (x['rgn'] == 'WSG') {
+          x['Nom région'] = 'Matane'
+        } else if (x['rgn'] == 'YRJ') {
+          x['Nom région'] = 'Lac-Saint-Jean'
+        } else if (x['rgn'] == 'YYY') {
+          x['Nom région'] = 'Rimouski - Mont-Joli'
+        } else if (x['rgn'] == 'WOC') {
+          x['Nom région'] = 'New Carlisle - Chandler'
+        } else if (x['rgn'] == 'WZS') {
+          x['Nom région'] = 'Amqui - vallée de la Matapédia'
+        } else if (x['rgn'] == 'YCL') {
+          x['Nom région'] = 'Restigouche - Bonaventure'
+        } else if (x['rgn'] == 'YBC') {
+          x['Nom région'] = 'Baie-Comeau'
+        } else if (x['rgn'] == 'YGP') {
+          x['Nom région'] = 'parc national de Forillon - Gaspé - Percé'
+        } else if (x['rgn'] == 'WBY' || x['rgn'] == 'wby') {
+          x['Nom région'] = 'Anticosti'
+        } else if (x['rgn'] == 'YZV') {
+          x['Nom région'] = 'Sept-Îles - Port-Cartier'
+        } else if (x['rgn'] == 'YGV') {
+          x['Nom région'] = 'Minganie'
+        } else if (x['rgn'] == 'YNA') {
+          x['Nom région'] = 'Natashquan'
+        } else if (x['rgn'] == 'WDM') {
+          x['Nom région'] = 'Chevery'
+        } else if (x['rgn'] == 'YAH') {
+          x['Nom région'] = 'LG Quatre - Laforge et Fontanges'
+        } else if (x['rgn'] == 'YKQ' || x['rgn'] == 'WKQ') {
+          x['Nom région'] = 'Waskaganish'
+        } else if (x['rgn'] == 'YBX') {
+          x['Nom région'] = 'Blanc-Sablon'
+        } else if (x['rgn'] == 'YMT') {
+          x['Nom région'] = 'Chibougamau'
+        } else if (x['rgn'] == 'YWK') {
+          x['Nom région'] = 'Fermont'
+        } else if (x['rgn'] == 'YVO') {
+          x['Nom région'] = 'Abitibi'
+        } else if (x['rgn'] == 'WPK') {
+          x['Nom région'] = 'Parent - réservoir Gouin'
+        } else if (x['rgn'] == 'WBA') {
+          x['Nom région'] = 'Témiscamingue'
+        } else if (x['rgn'] == 'YKL') {
+          x['Nom région'] = 'Schefferville'
+        } else if (x['rgn'] == 'YNM') {
+          x['Nom région'] = 'Matagami'
+        } else if (x['rgn'] == 'YVP') {
+          x['Nom région'] = 'Kuujjuaq'
+        } else if (x['rgn'] == 'WIZ') {
+          x['Nom région'] = 'vallée du Richelieu - Saint-Hyacinthe'
+        } else if (x['rgn'] == 'WSF') {
+          x['Nom région'] = 'Sainte-Anne-des-Monts - Grande-Vallée'
+        } else if (x['rgn'] == 'WEW') {
+          x['Nom région'] = 'Lanaudière'
+        }                        
+      }
+
+      console.log(data)
+    })
+
+    
+    }
+
+
+
+
+
 
     // Fonction dans laquelle je récupère une variable et je la divise par mois. Donc j'ai un 2D array. C'est facile d'enlever les NaN dans les simples array 
     // mais pour les 2D array c'est plus compliqué. La méthode est utilisée ici. 
@@ -948,16 +1167,12 @@ function retrieveAdvData(stName, wx) {
 function getRidOfNaN (promise3, promise4) {
 
     Promise.all([promise3, promise4]).then(values => {
-      console.log('temperature values')
-      console.log(values);
       let values0 = values[0];
       let values1 = values[1];
       let newnew = []
       for (let i = 0; i<=values0.length; i++) {
         newnew.push([values0[i], values1[i]])
       }
-      console.log("newnew")
-      console.log(newnew)
       let newValues = newnew.filter((x) => x[0] === 10);
       console.log(newValues)
       let inputArray = newValues.map(x => x[1]);
@@ -1126,5 +1341,5 @@ function statVerif (array) {
 
 //window["percent" + i] = createWindData(i);
   
-export { makeGraphic, makePie, getXMLinfo, updateLayers, stepForward, stepBackward, retrieveData, retrieveAdvData, windGraphic, selectFullPeriod, yearSelection, getVerif, statVerif }
+export { addRGN, makeGraphic, makePie, getXMLinfo, updateLayers, stepForward, stepBackward, retrieveData, retrieveAdvData, windGraphic, selectFullPeriod, yearSelection, getVerif, statVerif }
   
