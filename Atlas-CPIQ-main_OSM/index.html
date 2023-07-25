@@ -32,7 +32,7 @@
                 <h3 id="code"><strong><big>YUL | </big></strong></h3>
                 <span id = 'info1'> Latitude: </span> <span id="lat">-73.74&deg</span><br>
                 <span id = 'info2'> Longitude: </span> <span id="lng">45.47&deg</span><br>
-                Altitude: <span id="alt">233m</span><br><br>
+                Altitude: <span id="alt">233 m.</span><br><br>
                 Activité: <span id="active">2013 - 2023</span><br><br>
                 Identification: <span id="ntw">7025251</span>
               </div>
@@ -48,7 +48,9 @@
 
             </div>
             <div id="toggles">
+              
 
+                <div class="loader"></div>
 
               <!--
                 <svg xmlns="http://www.w3.org/2000/svg" id="arrowRight" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
@@ -60,6 +62,7 @@
               -->
               
                 <div id="graphics"></div>
+
             </div>
             <div id="map"></div>
 
@@ -113,6 +116,12 @@
             </div>
 
 
+            <div id="popup2" class="ol-popup2">
+              <a href="#" id="popup-closer2" class="ol-popup-closer2"></a>
+              <div id="popup-content2"></div>
+            </div>
+
+
 
             <div id="analyse">
               <div id="divBtn">
@@ -125,16 +134,18 @@
               
 
                 <select class="selectButton" id="variableSelector">
-                  <option value="Max Temp (°C)">Temp. max.</option>
-                  <option value="Min Temp (°C)">Temp. min.</option>
-                  <option value="Mean Temp (°C)">Temp. moy.</option>
-                  <option value="Spd of Max Gust (km/h)">Vent (vitesse)</option>
-                  <option value="Dir of Max Gust (10s deg)">Vent (direction)</option>
-                  <option value="windRose">Rose des vents</option>
-                  <option value="Snow on Grnd (cm)">Neige au sol</option>
-                  <option value="Total Rain (mm)">Pluie tot.</option>
-                  <option value="Total Snow (cm)">Neige tot.</option>
-                  <option value="Total Precip (mm)">Précip tot.</option>
+                  <option value="MAX_TEMPERATURE">Temp. max.</option>
+                  <option value="MIN_TEMPERATURE">Temp. min.</option>
+                  <option value="MEAN_TEMPERATURE">Temp. moy.</option>
+                  <option value="SPEED_MAX_GUST">Vent (vitesse)</option>
+                  <option value="DIRECTION_MAX_GUST">Vent (direction)</option>
+                  <option value="SNOW_ON_GROUND">Neige au sol</option>
+                  <option value="TOTAL_RAIN">Pluie tot.</option>
+                  <option value="TOTAL_SNOW">Neige tot.</option>
+                  <option value="TOTAL_PRECIPITATION">Précip tot.</option>
+                  <option value="MIN_REL_HUMIDITY">Hum. rel. max.</option>
+                  <option value="MAX_REL_HUMIDITY">Hum. rel. min.</option>
+
                 </select>
 
 
@@ -185,7 +196,7 @@
 
                 
                 <select class="selectButton" id="monthOrPeriodSelector">
-                  <option value="allmonths">allmonths</option>
+                  <option value="allmonths">tous les mois</option>
                   <option value="winter">hiver</option>
                   <option value="spring">printemps</option>
                   <option value="summer">ete</option>
@@ -206,7 +217,7 @@
 
 
                 <select class="selectButton" id="daySelector">
-                  <option value="alldays">alldays</option>
+                  <option value="alldays">tous les jours</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -223,21 +234,21 @@
                   <option value="14">14</option>
                   <option value="15">15</option>
                   <option value="16">16</option>
-                  <option value="16">17</option>
-                  <option value="16">18</option>
-                  <option value="16">19</option>
-                  <option value="16">20</option>
-                  <option value="16">21</option>
-                  <option value="16">22</option>
-                  <option value="16">23</option>
-                  <option value="16">24</option>
-                  <option value="16">25</option>
-                  <option value="16">26</option>
-                  <option value="16">27</option>
-                  <option value="16">28</option>
-                  <option value="16">29</option>
-                  <option value="16">30</option>
-                  <option value="16">31</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+                  <option value="26">26</option>
+                  <option value="27">27</option>
+                  <option value="28">28</option>
+                  <option value="29">29</option>
+                  <option value="30">30</option>
+                  <option value="31">31</option>
                 </select>
 
                 <button class="selectButton" id="goButton" type="button">Allez</button>
@@ -299,6 +310,7 @@
                     MQ: manqué quantité <br>
                     U: Quasi succès <br>
                     i: ignoré (quasi événement ou VTH/VBN)
+                    W: 
                   </div>
                 </div>
               </div>
