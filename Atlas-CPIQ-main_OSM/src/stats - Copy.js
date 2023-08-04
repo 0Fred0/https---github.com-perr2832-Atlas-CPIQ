@@ -186,8 +186,7 @@ function yearSelection(yearID) {
 
 
 
-function makeGraphic(allData, canvasId) {
-
+function makeGraphic(allData) {
   let labels = Object.keys(allData)
   labels = labels.map(str => {
     return Number(str) + 1;
@@ -197,7 +196,7 @@ function makeGraphic(allData, canvasId) {
   const data = {
       labels: labels,
       datasets: [{
-          label: "valeur",
+          label: "temp",
           backgroundColor: 'rgb(255, 0, 0)',
           borderColor: 'rgb(255, 0, 0)',
           data: allData,
@@ -214,76 +213,14 @@ function makeGraphic(allData, canvasId) {
       type: "line",
       data: data,
       options: {
-        responsive: false,
-        animation: {
-          onComplete: function () {
-            console.log(myChart.toBase64Image());
-          }
-        }
+        responsive: false
       }
   };
 
-  const myChart = new Chart(
-    document.getElementById(canvasId),
+  new Chart(
+    document.getElementById("analyseCanvas"),
     config
   );
-
-  var image64 = myChart.toBase64Image();
-
- 
-};
-
-
-function makeGraphic2(allData, canvasId) {
-  return new Promise(function (resolve, reject){
-
-  let labels = Object.keys(allData)
-  labels = labels.map(str => {
-    return Number(str) + 1;
-})
-
-
-  const data = {
-      labels: labels,
-      datasets: [{
-          label: "valeur",
-          backgroundColor: 'rgb(255, 0, 0)',
-          borderColor: 'rgb(255, 0, 0)',
-          data: allData,
-          tension: 0.4,
-          fill: {
-            target: 'origin',
-            below: 'rgb(0, 0, 255)',
-            above: 'rgb(255, 0, 0)'
-          }               
-      }]
-  }
-
-  const config = {
-      type: "line",
-      data: data,
-      options: {
-        responsive: false,
-        animation: {
-          onComplete: function () {
-            var image64 = myChart.toBase64Image();
-            resolve(image64)
-            //var img = new Image()
-           // img.src = image64
-           // console.log(myChart.toBase64Image());
-          //  var newTab = window.open("", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
-
-           // newTab.document.body.appendChild(img);
-          }
-        }
-      }
-  };
-
-  const myChart = new Chart(
-    document.getElementById(canvasId),
-    config
-  );
-  });
 };
 
 
@@ -291,7 +228,7 @@ function makePie(dataArray) {
 
 
   const data = {
-      labels: ['D', 'MF', 'Mpi', 'MT', 'MA', 'Mp0', 'F', 'U', 'i','W'],
+      labels: ['D', 'MF', 'Mpi', 'MT', 'MA', 'Mp0', 'F', 'U', 'i'],
       datasets: [{
           label: "temp",
           backgroundColor: [
@@ -303,7 +240,7 @@ function makePie(dataArray) {
             'rgb(240, 0, 0)',
             'rgb(0, 200, 0)',
             'rgb(0, 240, 0)',
-            'rgb(200, 200, 200)',       // en ajouter une pour W
+            'rgb(200, 200, 200)',
           ],
           data: dataArray,   
           datalabels: {
@@ -451,28 +388,55 @@ function stepBackward(modelVariable) {
 
 
 
-function retrieveData(stationID, variable, startYear, endYear) {
+function retrieveData(stationID, variable, firstYear, lastYear) {
   return new Promise(function (resolve, reject) {
 
   
-  var foo = [];
+  //let monthOrPeriod = event.target.id;
+  
+  
+  // Construct array of path to data files
+  let yeardifference = lastYear - firstYear
+  yeardifference = yeardifference + 1
 
-  for (var i = startYear; i <= endYear; i++) {
-      foo.push(i);
+ 
+  
+  //let startYear = 2002 //Correspond to oldest year of data files
+  
+  //let myString = myString.replace(/\D/g,'');
+  let allYears = Array.from(Array(yeardifference).keys())
+
+  let period = []
+ 
+
+  for (var i = 0; i < allYears.length; i++) {
+      period += Number(allYears[i]) + Number(firstYear) + ","
   }
  
   
+  // Create array of strings
+  period = period.split(",")
+  period = period.splice(0, period.length-1); // Remove the last empty item due to "," in the for loop
+
+  
+  // Create array of numbers
+  period = period.map(str => {
+      return Number(str);
+  })
+  
+  
+  
   let urls = []
-  for (var i = 0; i < foo.length; i++) {
-    urls += `https://api.weather.gc.ca/collections/climate-daily/items?f=json&CLIMATE_IDENTIFIER=${stationID}&LOCAL_YEAR=${foo[i]}` + ','
+  for (var i = 0; i < period.length; i++) {
+    urls += `./data/meteo/${stationID}/${stationID} ${period[i]}_EN.json` + ','
   }
 
+  // utiliser NODE.JS/ require pour acceder aux fichiers
+ 
 
   
   urls = urls.split(",")
   urls = urls.splice(0, urls.length-1);
-
-
 
   
   
@@ -484,155 +448,64 @@ function retrieveData(stationID, variable, startYear, endYear) {
       )
   
   ).then(data => {
+      let loadedData = data.flat();
+  
+  
+  
+  // Test pour mettre la recherche d'une variable dans une fonction //
+    
+  
+      let dataArray = []
+      for (let x of loadedData) {
+        dataArray += x[variable] + "," 
+      }
+      dataArray = dataArray.split(",")
+      dataArray = dataArray.splice(0, dataArray.length-1);
 
 
 
-
-
-     // let loadedData = data.flat();
-
-      // console.log(loadedData)
-
-      let feat = []
-
-    //  console.log(typeof loadedData)
-     // console.log(loadedData)
-
-      for (let x of data) {
-        feat.push(x.features)
+      function getAllIndexes(arr, val) {
+        var dataIndexes = [], i;
+        for(var i = 0; i < arr.length; i++)
+            if (arr[i] === val)
+            dataIndexes.push(i);
+        return dataIndexes;
       }
 
-      feat = feat.flat()
 
 
-      let variableData = []
 
-      for (let x of feat) {
-        variableData.push(x.properties[variable])
+      var dataIndexes = getAllIndexes(dataArray, "");
+    
+      function insertNaN(item, index) {
+        if (item !== -1) {
+          dataArray[item] = NaN;
+        }
       }
+      dataIndexes.forEach(insertNaN);
+
+      dataArray = dataArray.map(str => {
+        return Number(str);
+      });
 
      
-      resolve(variableData)
+      resolve(dataArray)
       reject("error")
     });
 
   });
 };
-  
 
 
 
 
-
-
-function retrieveAdvData(rgnName, wx) {
+function retrieveAdvData(stName, wx) {
   return new Promise(function (resolve, reject){
 
     fetch("data/warning/alldata.json")
     .then(response => response.json())
     .then(data => {
-
-
- 
-
-      for (let x of data) {
-        if (x['rgn'] == 'YGL') {
-          x['Nom région'] = 'baie James et rivière La Grande'
-        } else if (x['rgn'] == 'HYA') {
-          x['Nom région'] = 'Quaqtaq'
-        } else if (x['rgn'] == 'WBZ') {
-          x['Nom région'] = 'Vaudreuil - Soulanges - Huntingdon'
-        } else if (x['rgn'] == 'WUL' || x['rgn'] == 'YUL') {
-          x['Nom région'] = 'Montréal métropolitain - Laval'
-        } else if (x['rgn'] == 'YSC') {
-          x['Nom région'] = 'Estrie'
-        } else if (x['rgn'] == 'YMX') {
-          x['Nom région'] = 'Lachute - Saint-Jérôme'
-        } else if (x['rgn'] == 'WHV') {
-          x['Nom région'] = 'Beauce'
-        } else if (x['rgn'] == 'WNQ') {
-          x['Nom région'] = 'Drummondville - Bois-Francs'
-        } else if (x['rgn'] == 'WJT') {
-          x['Nom région'] = 'Laurentides'
-        } else if (x['rgn'] == 'YWA') {
-          x['Nom région'] = 'Pontiac'
-        } else if (x['rgn'] == 'WTY') {
-          x['Nom région'] = 'Mauricie'
-        } else if (x['rgn'] == 'YQB ' || x['rgn'] == 'WQB') {
-          x['Nom région'] = 'Québec'
-        } else if (x['rgn'] == 'WPD') {
-          x['Nom région'] = 'rÃ©serve faunique des Laurentides'
-        } else if (x['rgn'] == 'WDQ') {
-          x['Nom région'] = 'La Tuque'
-        } else if (x['rgn'] == 'WIS') {
-          x['Nom région'] = 'Charlevoix'
-        } else if (x['rgn'] == 'WMJ') {
-          x['Nom région'] = 'Haute-Gatineau - Lièvre - Papineau'
-        } else if (x['rgn'] == 'WST') {
-          x['Nom région'] = 'Montmagny - L\'Islet'
-        } else if (x['rgn'] == 'WNH') {
-          x['Nom région'] = 'Kamouraska - Rivière-du-Loup - Trois-Pistoles'
-        } else if (x['rgn'] == 'YBG') {
-          x['Nom région'] = 'Saguenay'
-        } else if (x['rgn'] == 'WSG') {
-          x['Nom région'] = 'Matane'
-        } else if (x['rgn'] == 'YRJ') {
-          x['Nom région'] = 'Lac-Saint-Jean'
-        } else if (x['rgn'] == 'YYY') {
-          x['Nom région'] = 'Rimouski - Mont-Joli'
-        } else if (x['rgn'] == 'WOC') {
-          x['Nom région'] = 'New Carlisle - Chandler'
-        } else if (x['rgn'] == 'WZS') {
-          x['Nom région'] = 'Amqui - vallée de la Matapédia'
-        } else if (x['rgn'] == 'YCL') {
-          x['Nom région'] = 'Restigouche - Bonaventure'
-        } else if (x['rgn'] == 'YBC') {
-          x['Nom région'] = 'Baie-Comeau'
-        } else if (x['rgn'] == 'YGP') {
-          x['Nom région'] = 'parc national de Forillon - Gaspé - Percé'
-        } else if (x['rgn'] == 'WBY' || x['rgn'] == 'wby') {
-          x['Nom région'] = 'Anticosti'
-        } else if (x['rgn'] == 'YZV') {
-          x['Nom région'] = 'Sept-Îles - Port-Cartier'
-        } else if (x['rgn'] == 'YGV') {
-          x['Nom région'] = 'Minganie'
-        } else if (x['rgn'] == 'YNA') {
-          x['Nom région'] = 'Natashquan'
-        } else if (x['rgn'] == 'WDM') {
-          x['Nom région'] = 'Chevery'
-        } else if (x['rgn'] == 'YAH') {
-          x['Nom région'] = 'LG Quatre - Laforge et Fontanges'
-        } else if (x['rgn'] == 'YKQ' || x['rgn'] == 'WKQ') {
-          x['Nom région'] = 'Waskaganish'
-        } else if (x['rgn'] == 'YBX') {
-          x['Nom région'] = 'Blanc-Sablon'
-        } else if (x['rgn'] == 'YMT') {
-          x['Nom région'] = 'Chibougamau'
-        } else if (x['rgn'] == 'YWK') {
-          x['Nom région'] = 'Fermont'
-        } else if (x['rgn'] == 'YVO') {
-          x['Nom région'] = 'Abitibi'
-        } else if (x['rgn'] == 'WPK') {
-          x['Nom région'] = 'Parent - réservoir Gouin'
-        } else if (x['rgn'] == 'WBA') {
-          x['Nom région'] = 'Témiscamingue'
-        } else if (x['rgn'] == 'YKL') {
-          x['Nom région'] = 'Schefferville'
-        } else if (x['rgn'] == 'YNM') {
-          x['Nom région'] = 'Matagami'
-        } else if (x['rgn'] == 'YVP') {
-          x['Nom région'] = 'Kuujjuaq'
-        } else if (x['rgn'] == 'WIZ') {
-          x['Nom région'] = 'vallée du Richelieu - Saint-Hyacinthe'
-        } else if (x['rgn'] == 'WSF') {
-          x['Nom région'] = 'Sainte-Anne-des-Monts - Grande-Vallée'
-        } else if (x['rgn'] == 'WEW') {
-          x['Nom région'] = 'Lanaudière'
-        }                        
-      }
-
-
-      console.log('second step')
+      console.log("dataaaaaaaaaaaaaaaaaaaa")
       console.log(data)
 
  
@@ -640,7 +513,7 @@ function retrieveAdvData(rgnName, wx) {
 
       let dataPerSt = []
       for (let x of data) {
-        if (x['Nom région'] == rgnName) {
+        if (x['rgn'] == stName) {
           dataPerSt.push(x)
         }
       }
@@ -650,7 +523,7 @@ function retrieveAdvData(rgnName, wx) {
 
       let wxArray = []
       for (let x of dataPerSt) {
-        if (x['WX2'] == wx) {
+        if (x['WX'] == wx) {
           wxArray.push(x)
         } 
       }
@@ -668,21 +541,17 @@ function retrieveAdvData(rgnName, wx) {
         counts[num] = counts[num] ? counts[num] + 1 : 1;
       }
 
-
-      // il manque encore MF...
+      console.log(counts)
 
       let D = counts['D']
       let F = counts['F']
       let MA = counts['MA']
-      let MP0 = counts['MP0'] + counts['Mp0']
+      let MP0 = counts['MP0']
       let Mpi = counts['Mpi']
       let MT = counts['MT']
       let MQ = counts['MQ']
       let U = counts['U']
       let i = counts['i']
-      let W = counts['W']
-
-      
 
       D = D || 0
       F = F || 0
@@ -693,15 +562,18 @@ function retrieveAdvData(rgnName, wx) {
       MQ = MQ || 0
       U = U || 0
       i = i || 0 
-      W = W || 0 
-
       
 
 
-      let coteArray = [D, MQ, Mpi, MT, MA, MP0, F, U, i, W]
+      let coteArray = [D, MQ, Mpi, MT, MA, MP0, F, U, i]
 
 
 
+      console.log('PREMIER TEST')
+      console.log(coteArray)
+
+
+     
       resolve(coteArray)
       reject("error")
 
@@ -734,7 +606,13 @@ function retrieveAdvData(rgnName, wx) {
         periodDataArray = periodDataArray.filter((x) => x[0] === Number(periodSelected[0]));
       }
 
+
+      console.log('yearSelected')
+      console.log(periodDataArray)
+
   
+
+
 
       if (isNaN(Number(periodSelected[1])) && periodSelected[1]=='allmonths') {
         periodDataArray = periodDataArray
@@ -768,6 +646,13 @@ function retrieveAdvData(rgnName, wx) {
 
 
 
+
+      console.log('monthSelected')
+      console.log(periodDataArray)
+
+
+
+
       if (isNaN(Number(periodSelected[2]))) {
         periodDataArray = periodDataArray
       } 
@@ -778,23 +663,15 @@ function retrieveAdvData(rgnName, wx) {
      
 
 
-      periodDataArray.sort(function(a, b) {
-        return a[0] - b[0];
-      });
 
-      periodDataArray.sort(function(a, b) {
-        return a[1] - b[1];
-      });
-
-
-      periodDataArray.sort(function(a, b) {
-        return a[2] - b[2];
-      });
-
+      console.log('daySelected')
+      console.log(periodDataArray)
 
 
       periodDataArray = periodDataArray.map(x => x[3]);
 
+      console.log('finalArray')
+      console.log(periodDataArray)
 
 
       return periodDataArray
@@ -1093,136 +970,6 @@ function retrieveAdvData(rgnName, wx) {
 
 
 
-    function addRGN () {
-
-      fetch("data/warning/alldata.json")
-    .then(response => response.json())
-    .then(data => {
-
-      var diff = []
-
-      for (let x of data) {
-        diff.push(x['rgn'])
-      }
-
-
-      function onlyUnique(value, index, array) {
-        return array.indexOf(value) === index;
-      }
-
-      var unique = diff.filter(onlyUnique);
-
-      console.log(unique)
-
-
-      //  Il faudra encore ajouter LAN, TRM, DEG, LAU, ESC, MAT, MUR, ZMV, DOR
-
-      for (let x of data) {
-        if (x['rgn'] == 'YGL') {
-          x['Nom région'] = 'baie James et rivière La Grande'
-        } else if (x['rgn'] == 'HYA') {
-          x['Nom région'] = 'Quaqtaq'
-        } else if (x['rgn'] == 'WBZ') {
-          x['Nom région'] = 'Vaudreuil - Soulanges - Huntingdon'
-        } else if (x['rgn'] == 'WUL' || x['rgn'] == 'YUL') {
-          x['Nom région'] = 'Montréal métropolitain - Laval'
-        } else if (x['rgn'] == 'YSC') {
-          x['Nom région'] = 'Estrie'
-        } else if (x['rgn'] == 'YMX') {
-          x['Nom région'] = 'Lachute - Saint-Jérôme'
-        } else if (x['rgn'] == 'WHV') {
-          x['Nom région'] = 'Beauce'
-        } else if (x['rgn'] == 'WNQ') {
-          x['Nom région'] = 'Drummondville - Bois-Francs'
-        } else if (x['rgn'] == 'WJT') {
-          x['Nom région'] = 'Laurentides'
-        } else if (x['rgn'] == 'YWA') {
-          x['Nom région'] = 'Pontiac'
-        } else if (x['rgn'] == 'WTY') {
-          x['Nom région'] = 'Mauricie'
-        } else if (x['rgn'] == 'YQB ' || x['rgn'] == 'WQB') {
-          x['Nom région'] = 'Québec'
-        } else if (x['rgn'] == 'WPD') {
-          x['Nom région'] = 'rÃ©serve faunique des Laurentides'
-        } else if (x['rgn'] == 'WDQ') {
-          x['Nom région'] = 'La Tuque'
-        } else if (x['rgn'] == 'WIS') {
-          x['Nom région'] = 'Charlevoix'
-        } else if (x['rgn'] == 'WMJ') {
-          x['Nom région'] = 'Haute-Gatineau - Lièvre - Papineau'
-        } else if (x['rgn'] == 'WST') {
-          x['Nom région'] = 'Montmagny - L\'Islet'
-        } else if (x['rgn'] == 'WNH') {
-          x['Nom région'] = 'Kamouraska - Rivière-du-Loup - Trois-Pistoles'
-        } else if (x['rgn'] == 'YBG') {
-          x['Nom région'] = 'Saguenay'
-        } else if (x['rgn'] == 'WSG') {
-          x['Nom région'] = 'Matane'
-        } else if (x['rgn'] == 'YRJ') {
-          x['Nom région'] = 'Lac-Saint-Jean'
-        } else if (x['rgn'] == 'YYY') {
-          x['Nom région'] = 'Rimouski - Mont-Joli'
-        } else if (x['rgn'] == 'WOC') {
-          x['Nom région'] = 'New Carlisle - Chandler'
-        } else if (x['rgn'] == 'WZS') {
-          x['Nom région'] = 'Amqui - vallée de la Matapédia'
-        } else if (x['rgn'] == 'YCL') {
-          x['Nom région'] = 'Restigouche - Bonaventure'
-        } else if (x['rgn'] == 'YBC') {
-          x['Nom région'] = 'Baie-Comeau'
-        } else if (x['rgn'] == 'YGP') {
-          x['Nom région'] = 'parc national de Forillon - Gaspé - Percé'
-        } else if (x['rgn'] == 'WBY' || x['rgn'] == 'wby') {
-          x['Nom région'] = 'Anticosti'
-        } else if (x['rgn'] == 'YZV') {
-          x['Nom région'] = 'Sept-Îles - Port-Cartier'
-        } else if (x['rgn'] == 'YGV') {
-          x['Nom région'] = 'Minganie'
-        } else if (x['rgn'] == 'YNA') {
-          x['Nom région'] = 'Natashquan'
-        } else if (x['rgn'] == 'WDM') {
-          x['Nom région'] = 'Chevery'
-        } else if (x['rgn'] == 'YAH') {
-          x['Nom région'] = 'LG Quatre - Laforge et Fontanges'
-        } else if (x['rgn'] == 'YKQ' || x['rgn'] == 'WKQ') {
-          x['Nom région'] = 'Waskaganish'
-        } else if (x['rgn'] == 'YBX') {
-          x['Nom région'] = 'Blanc-Sablon'
-        } else if (x['rgn'] == 'YMT') {
-          x['Nom région'] = 'Chibougamau'
-        } else if (x['rgn'] == 'YWK') {
-          x['Nom région'] = 'Fermont'
-        } else if (x['rgn'] == 'YVO') {
-          x['Nom région'] = 'Abitibi'
-        } else if (x['rgn'] == 'WPK') {
-          x['Nom région'] = 'Parent - réservoir Gouin'
-        } else if (x['rgn'] == 'WBA') {
-          x['Nom région'] = 'Témiscamingue'
-        } else if (x['rgn'] == 'YKL') {
-          x['Nom région'] = 'Schefferville'
-        } else if (x['rgn'] == 'YNM') {
-          x['Nom région'] = 'Matagami'
-        } else if (x['rgn'] == 'YVP') {
-          x['Nom région'] = 'Kuujjuaq'
-        } else if (x['rgn'] == 'WIZ') {
-          x['Nom région'] = 'vallée du Richelieu - Saint-Hyacinthe'
-        } else if (x['rgn'] == 'WSF') {
-          x['Nom région'] = 'Sainte-Anne-des-Monts - Grande-Vallée'
-        } else if (x['rgn'] == 'WEW') {
-          x['Nom région'] = 'Lanaudière'
-        }                        
-      }
-
-      console.log(data)
-    })
-
-    
-    }
-
-
-
-
-
 
     // Fonction dans laquelle je récupère une variable et je la divise par mois. Donc j'ai un 2D array. C'est facile d'enlever les NaN dans les simples array 
     // mais pour les 2D array c'est plus compliqué. La méthode est utilisée ici. 
@@ -1230,12 +977,16 @@ function retrieveAdvData(rgnName, wx) {
 function getRidOfNaN (promise3, promise4) {
 
     Promise.all([promise3, promise4]).then(values => {
+      console.log('temperature values')
+      console.log(values);
       let values0 = values[0];
       let values1 = values[1];
       let newnew = []
       for (let i = 0; i<=values0.length; i++) {
         newnew.push([values0[i], values1[i]])
       }
+      console.log("newnew")
+      console.log(newnew)
       let newValues = newnew.filter((x) => x[0] === 10);
       console.log(newValues)
       let inputArray = newValues.map(x => x[1]);
@@ -1404,5 +1155,5 @@ function statVerif (array) {
 
 //window["percent" + i] = createWindData(i);
   
-export { addRGN, makeGraphic, makeGraphic2, makePie, getXMLinfo, updateLayers, stepForward, stepBackward, retrieveData, retrieveAdvData, windGraphic, selectFullPeriod, yearSelection, getVerif, statVerif }
+export { makeGraphic, makePie, getXMLinfo, updateLayers, stepForward, stepBackward, retrieveData, retrieveAdvData, windGraphic, selectFullPeriod, yearSelection, getVerif, statVerif }
   
