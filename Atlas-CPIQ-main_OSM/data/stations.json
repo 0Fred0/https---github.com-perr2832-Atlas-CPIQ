@@ -1,7 +1,6 @@
 {
     "type": "FeatureCollection",
-    "features": [
-        {
+    "features": [{
         "type": "Feature",
         "id": 2,
         "geometry": {
@@ -69,8 +68,8 @@
                 "EC": 30173
             },
             "class": 1,
-            "provider": "SMC / MSC",
-            "active": 1,
+            "provider": 1,
+            "active": "SMC / MSC",
             "platform": {
                 "ninjo": 1,
                 "amsas": 1,
@@ -3206,7 +3205,7 @@
             "coordinates": [-73.7417, 45.4678, 32]
         },
         "properties": {
-            "name": "✈ Montréal - P.-E.-Trudeau CWTQ",
+            "name": "✈ Montréal - P.-E.-Trudeau",
             "code": {
                 "TC": "CWTQ",
                 "CL": "702S006",
