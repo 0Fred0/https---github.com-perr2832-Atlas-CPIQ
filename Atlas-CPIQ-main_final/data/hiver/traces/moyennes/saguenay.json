@@ -1,0 +1,42 @@
+[
+    {
+      "Période": "1971-2000",
+      "Première trace": "01-oct",
+      "Premier 5 cm": "28-oct",
+      "Premier 10 cm": "12-nov",
+      "Premier 15 cm": "28-nov",
+      "# de 15 cm +": "5,6"
+    },
+    {
+      "Période": "1981-2010",
+      "Première trace": "05-oct",
+      "Premier 5 cm": "28-oct",
+      "Premier 10 cm": "14-nov",
+      "Premier 15 cm": "29-nov",
+      "# de 15 cm +": "4,8"
+    },
+    {
+      "Période": "1991-2020",
+      "Première trace": "10-oct",
+      "Premier 5 cm": "04-nov",
+      "Premier 10 cm": "22-nov",
+      "Premier 15 cm": "03-déc",
+      "# de 15 cm +": "3,7"
+    },
+    {
+      "Période": "Depuis 2000",
+      "Première trace": "14-oct",
+      "Premier 5 cm": "08-nov",
+      "Premier 10 cm": "23-nov",
+      "Premier 15 cm": "29-nov",
+      "# de 15 cm +": "2,9"
+    },
+    {
+      "Période": "1971-2022",
+      "Première trace": "07-oct",
+      "Premier 5 cm": "02-nov",
+      "Premier 10 cm": "18-nov",
+      "Premier 15 cm": "28-nov",
+      "# de 15 cm +": "4,5"
+    }
+  ]

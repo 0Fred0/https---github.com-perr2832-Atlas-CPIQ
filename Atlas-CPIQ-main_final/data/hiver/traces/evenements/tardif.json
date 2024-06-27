@@ -1,0 +1,65 @@
+[
+    {
+      "Ville": "Val-D'or",
+      "Première trace": "13 nov. 2022",
+      "Premier 5 cm": "17 déc. 2022",
+      "Premier 10 cm": "06-mars-17",
+      "Premier 15 cm": "Pas de 15 cm hivers 97-98, 99-2000, 2006-07, 2007-08, 2013-14, 2014-15, 2015-16, 2016-17"
+    },
+    {
+      "Ville": "Ottawa",
+      "Première trace": "17 nov. 2011",
+      "Premier 5 cm": "29 déc. 2015",
+      "Premier 10 cm": "10 févr. 2000",
+      "Premier 15 cm": "Pas de 15 cm hivers 82-83, 85-86, 2011-12"
+    },
+    {
+      "Ville": "Montréal",
+      "Première trace": "23 nov. 2011",
+      "Premier 5 cm": "7 janv. 1983",
+      "Premier 10 cm": "22 févr. 1980",
+      "Premier 15 cm": "Pas de 15 cm hivers 80-81, 82-83"
+    },
+    {
+      "Ville": "Sherbrooke",
+      "Première trace": "23 nov. 2021",
+      "Premier 5 cm": "8 jan. 1998",
+      "Premier 10 cm": "Pas de 10 cm hiver 2020-21",
+      "Premier 15 cm": "Pas de 15 cm hivers 1998-99, 2001-02, 2005-06, 2020-21, 2021-22"
+    },
+    {
+      "Ville": "Québec",
+      "Première trace": "",
+      "Premier 5 cm": "",
+      "Premier 10 cm": "",
+      "Premier 15 cm": ""
+    },
+    {
+      "Ville": "Bagotville",
+      "Première trace": "3 nov. 2021",
+      "Premier 5 cm": "9 déc. 2011",
+      "Premier 10 cm": "25 jan. 2017",
+      "Premier 15 cm": "Pas de 15 cm hiver 2017-18"
+    },
+    {
+      "Ville": "Mont-Joli",
+      "Première trace": "18 nov. 2021",
+      "Premier 5 cm": "24 déc. 2009",
+      "Premier 10 cm": "29 déc. 2011",
+      "Premier 15 cm": "27 févr. 2002"
+    },
+    {
+      "Ville": "Gaspé",
+      "Première trace": "12 nov. 2019, 21, 22",
+      "Premier 5 cm": "13 jan. 2002",
+      "Premier 10 cm": "13 jan. 2002",
+      "Premier 15 cm": "20 fév. 1974"
+    },
+    {
+      "Ville": "Sept-Îles",
+      "Première trace": "",
+      "Premier 5 cm": "",
+      "Premier 10 cm": "",
+      "Premier 15 cm": ""
+    }
+  ]
