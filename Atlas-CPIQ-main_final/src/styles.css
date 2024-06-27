@@ -1,0 +1,1211 @@
+html,
+body {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0 ;
+  right: 0;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  position: relative;
+  grid-template-columns: 28% 72%;
+  grid-template-rows: 8% 55% 37%;
+}
+
+
+/* rgb(123, 158, 171) */
+
+
+#title {
+padding-left: 5%;
+font-weight: bold;
+background-color: white;
+font-size: 200%;
+grid-area: 1 / 1 / span 1 / span 2;
+width: 100%;
+height: 100%;
+}
+
+
+#info {
+  border-radius: 3%;
+  background-color: rgb(240,240,240);
+  grid-area: 2 / 1 / span 1 / span 1;
+  height: 100%;
+  width: 97%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 50% 10% 40%;
+  position: relative;
+}
+
+
+#geoDiv {
+  grid-area: 1 / 1 / span 1 / span 1;
+  font-size: 100%;
+  width: 100%;
+  height: 50%;
+  position: relative;
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+#text1 {
+  font-size: 100%;
+  
+
+}
+
+.geoText {
+  height: 100%;
+}
+
+.geoInfo {
+  height: 100%;
+}
+
+#selectDiv {
+  grid-area: 2 / 1 / span 1 / span 1;
+  font-size: 100%;
+  position: relative;
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+
+#buttonDiv {
+  grid-area: 3 / 1 / span 1 / span 1;
+  font-size: 100%;
+  position: relative;
+  margin-right: 5%;
+  margin-left: 5%;
+  margin-bottom: 5%;
+}
+
+
+
+.pathButtons {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 25%;
+  box-shadow: none;
+  border-width: 1px;
+}
+
+
+.allButtonDiv button:hover {
+  cursor: pointer;
+  background-color: rgb(104, 139, 171);
+}
+
+
+#LTCEBtn {
+  color: white;
+  background-color: rgb(104, 139, 171);
+  border-color: black;
+}
+
+
+#LTCEBtn:hover {
+  cursor: pointer;
+  background-color: rgb(104, 139, 171);
+}
+
+
+#dataBtn {
+  color: white;
+  background-color: rgb(123, 158, 171);
+  border-color: black;
+}
+
+#dataBtn:hover {
+  cursor: pointer;
+  background-color: rgb(104, 139, 171);
+}
+
+
+#verifBtn {
+  color: white;
+  background-color: rgb(123, 158, 171);
+  border-color: black;
+
+}
+
+#verifBtn:hover {
+  cursor: pointer;
+  background-color: rgb(104, 139, 171);
+}
+
+
+
+#maritimeBtn {
+  color: white;
+  background-color: rgb(123, 158, 171);
+  border-color: black;
+}
+
+#maritimeBtn:hover {
+  cursor: pointer;
+  background-color: rgb(104, 139, 171);
+}
+
+
+#toggles {
+  border-radius: 3%;
+  background-color: rgb(240,240,240);
+  grid-area: 3 / 1 / span 1 / span 1;
+  height: 97%;
+  width: 97%;
+  position: relative;
+  margin-top: 2%;
+}
+
+
+
+#goButtonX:hover {
+  cursor: pointer;
+}
+
+#goButtonX:active {
+  transform: scale(0.98);
+}
+
+
+#maritimeStationspopup-close:hover {
+  background-color: rgb(54, 74, 105);
+  cursor: pointer;
+}
+
+
+
+label.label-checkbox {
+  cursor: pointer;
+}
+
+
+label.label-checkbox input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+label.label-checkbox span {
+  padding: 5px 5px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  color: #202020;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  background: #f5f5f5;
+  user-select: none;
+  box-shadow: 1px 2px grey;
+}
+
+label.label-checkbox input:checked + span {
+  box-shadow: inset 1px 2px 5px #777;
+  transform: translateY(1px);
+  background: #e5e5e5;
+}
+
+
+
+.switch {
+  position: absolute;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-left: 20px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-color: black;
+  border-width: 20px;
+  margin-top: 1px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 4px;
+  top: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+
+
+
+#graphics {
+  height: 100%;
+  width: 100%;
+}
+
+
+#toolBar {
+  background-color: rgb(113, 121, 131, 0.2);
+}
+
+.xtremBtns {
+  position: fixed;
+  margin: 20px;
+}
+
+
+
+
+
+#map {
+  grid-area: 2 / 2 / span 2 / span 1;
+  background: beige;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  cursor: grab;
+  z-index: 0;
+}
+
+
+#map:active {
+  cursor: grabbing;
+}
+
+
+#selectGeomet {
+  position: fixed;
+  visibility: hidden;
+  margin-left: 1100px;
+  margin-top: 80px;
+}
+
+
+#cmdBtn {
+  position: fixed;
+  visibility: hidden;
+  margin-left: 700px;
+  margin-top: 540px;
+}
+
+#cmdBtn button{
+  width: 50px;
+}
+
+#selectTime {
+  position: fixed;
+  visibility: hidden;
+  margin-left: 730px;
+  margin-top: 570px;
+}
+
+
+
+
+#analyse {
+  grid-area: 3 / 2 / span 1 / span 1;
+  border-width: 2px 0px 10px 0px;   /* top right bottom left */
+  border-style: solid;
+  border-color: rgb(123, 158, 171);
+  visibility: hidden;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 15% 85%;
+  background-color: rgb(113, 121, 131, 0.2);
+}
+
+
+
+#divBtn {
+  grid-area: 1 / 1 / span 1 / span 1; 
+}
+
+#divBtn2 {
+  grid-area: 1 / 1 / span 1 / span 1; 
+}
+
+
+#analyseGraphs {
+  grid-area: 2 / 1 / span 1 / span 1;
+  display: grid;
+  grid-template-columns: 0% 100% 0%;
+  grid-template-rows: 100%;
+}
+
+
+#column-left {
+  grid-area: 1 / 1 / span 1 / span 1;
+  visibility: hidden;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 25% 25% 25% 25%;
+  padding-top: 30px;
+  padding-left: 80px;
+}
+
+
+
+
+
+#POD{
+  grid-area: 1 / 1 / span 1 / span 1;
+  background-color: red;
+  display: inline;
+}
+
+
+#FAR{
+  grid-area: 2 / 1 / span 1 / span 1;
+}
+
+#CSI{
+  grid-area: 3 / 1 / span 1 / span 1;
+}
+
+
+#BIAIS{
+  grid-area: 4 / 1 / span 1 / span 1;
+}
+
+
+
+
+
+
+#column-canvas {
+  grid-area: 1 / 2 / span 1 / span 1;
+}
+
+
+#analyseCanvas {
+  background-color: white;
+  margin: auto;
+  display: block;
+}
+
+
+#column-right {
+  grid-area: 1 / 3 / span 1 / span 1;
+}
+
+
+#text-right {
+  visibility: hidden;
+  padding: 20px;
+}
+
+
+#close {
+  font-size: 30px;
+  color: grey;
+  background-color: rgb(113, 121, 131, 0);
+  border-width: 0px;
+}
+
+
+
+
+
+
+/*
+#arrowRight {
+  position: relative;
+  left: 200px;
+  cursor: pointer;
+  visibility: visible;
+}
+
+#arrowLeft {
+  position: relative;
+  left: 1450px;
+  cursor: pointer;
+  visibility: hidden;
+}
+*/
+
+
+
+
+/*
+#popup {
+  visibility: hidden;
+}
+
+
+.ol-popup {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 300px;
+}
+
+.ol-popup:after,
+.ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.ol-popup:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+
+.ol-popup:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 5px;
+  right: 8px;
+}
+
+.ol-popup-closer:after {
+  content: "✖";
+  color: #A9A9A9;
+}
+*/
+
+
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  border-width: 20px;
+  border-color: black;
+}
+
+#circle1 {
+  background-color: blue;
+}
+
+#circle2 {
+  background-color: green;
+}
+
+#circle3 {
+  background-color: orange;
+}
+
+
+
+#stationsLegend {
+  position: absolute;
+  right: 0%;
+  bottom: 0%;
+  width: 25%;
+  height: 15%;
+  background-color: rgb(231, 231, 221);
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+  visibility: hidden;
+}
+
+#legendText {
+  width: 100%;
+  height: 100%;
+  padding-top: 5%;
+  padding-left: 5%;
+}
+
+
+
+
+
+
+
+
+
+
+
+#maritimeLegend {
+  position: absolute;
+  right: 0%;
+  bottom: 0%;
+  width: 30%;
+  height: 25%;
+  background-color: rgb(231, 231, 221);
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+  visibility: hidden;
+
+  display: grid;
+
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 100%;
+}
+
+
+#maritimeText{
+  grid-area: 1 / 1 / span 1 / span 1;
+  padding-top: 5%;
+  padding-left: 10%;
+}
+
+#titleText{
+  font-weight: bold;
+  margin-left: 20%;
+}
+
+
+#boxLegend {
+  width: 100%;
+  margin-top: 8%;
+  height: 55%;
+  width: 80%;
+  background-color: white;
+  display: inline-block;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-size: 90%;
+  text-align: center;
+}
+
+
+
+
+#tideHour {
+  width: 100%;
+  color: white;
+  background-color: rgb(158, 0, 133);
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+
+
+
+#scale {
+  grid-area: 1 / 2 / span 1 / span 1;
+  padding-top: 5%;
+  padding-left: 12%;
+}
+
+
+#titleScale {
+  font-weight: bold;
+}
+
+
+.rectangle {
+  height: 8%;
+  width: 18%;
+  display: inline-block;
+}
+
+
+#rectangle1 {
+  background-color: rgb(255, 255, 0);
+}
+
+#rectangle2 {
+  background-color: rgb(255, 155, 0);
+}
+
+#rectangle3 {
+  background-color: rgb(255, 100, 0);
+}
+
+#rectangle4 {
+  background-color: rgb(255, 55, 0);
+}
+
+#rectangle5 {
+  background-color: rgb(255, 0, 0);
+}
+
+#rectangle6 {
+  background-color: black;
+}
+
+
+
+
+
+
+
+
+
+.ol-overlay {
+  position: fixed;
+  background-color: rgb(231, 231, 221);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  min-width: 150px;
+}
+
+
+
+
+#maritimeStationspopup {
+  visibility: hidden;
+}
+
+
+
+
+.ol-maritimeStationspopup {
+  position: absolute;
+  background-color: rgb(240,240,240);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  width: 500px;
+  height: 700px;
+}
+
+#maritimeStationspopup-content {
+  font-size: 18px;
+}
+
+
+
+#LTCE_popup {
+  display: none;
+}
+
+.ol-popup {
+  position: relative;
+  background-color: rgb(240,240,240);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  width: 600px;
+  height: 500px;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
+
+}
+
+
+
+.ol-popup:after,
+    .ol-popup:before {
+      top: 100%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .ol-popup:after {
+      border-top-color: rgb(240,240,240);
+      border-width: 10px;
+      left: 43%;
+    }
+
+
+
+
+
+
+
+
+.popup-content{
+  position: relative;
+  font-size: 18px;
+  height: 80%;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+
+
+
+
+
+#rgnpopup-content{
+  height: 70%;
+}
+
+
+#LTCE_popup-content{
+  height: 60%;
+}
+
+
+
+
+
+#loader {
+  position: relative;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  margin-left: 25%;
+  margin-top: 7%;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  display: none;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+.form-question {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 0 3rem;
+  min-height: 3rem;
+}
+.form-question__title {
+  color: #342357;
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+.input-container {
+  border-bottom: solid 2px #333333;
+}
+.input-container input {
+  border: none;
+  box-sizing: border-box;
+  outline: 0;
+  padding: .75rem;
+  position: relative;
+  width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
+
+
+
+
+/*
+.form-question-maritime {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 0 3rem;
+  min-height: 3rem;
+}
+*/
+
+.form-question__title-maritime {
+  color: #342357;
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+
+
+#input-container-maritime {
+  border-bottom: solid 2px #333333;
+  display: none;
+}
+
+
+#form-question__title-maritime {
+  font-size: 20px;
+  display: none;
+}
+
+
+.input-container-maritime input {
+  border: none;
+  box-sizing: border-box;
+  outline: 0;
+  padding: .75rem;
+  position: relative;
+  width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
+
+#tooltip {
+  display: none;
+  position: relative;
+  background-color: rgb(136,136,136, 0.5);
+  border-radius: 5px;
+  text-align: center;
+  cursor: help;
+  margin-top: 20px;
+}
+
+#tooltip #tooltiptext {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#tooltip #tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+#tooltip:hover #tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+#tooltip2 {
+  position: relative;
+  background-color: rgb(136,136,136, 0.5);
+  border-radius: 5px;
+  text-align: center;
+  cursor: help;
+}
+
+#tooltip2 #tooltiptext2 {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#tooltip2 #tooltiptext2::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+#tooltip2:hover #tooltiptext2 {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+#legendForAdv{
+  display: none;
+  font-size: 14px;
+}
+
+
+
+
+
+.navbar {
+  overflow: hidden;
+  background-color: rgb(91, 127, 185);
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+
+#LTCE_popup-close {
+  color: rgb(0,0,0,0.5);
+  font-size: 25px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 8px;
+  border-color: rgb(0,0,0,0);
+  background-color: rgb(0,0,0,0);
+}
+
+#LTCE_popup-close:hover {
+  background-color: rgb(54, 74, 105);
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: rgb(91, 127, 255);
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+
+
+
+#stationsclkdpopup {
+  display: none;
+}
+
+#stationsclkdpopup-close {
+  color: rgb(0,0,0,0.5);
+  font-size: 25px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 8px;
+  border-color: rgb(0,0,0,0);
+  background-color: rgb(0,0,0,0);
+}
+
+
+#stationsclkdpopup-close:hover {
+  background-color: rgb(113, 121, 131, 0.2);
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+
+
+#popupTitleDiv {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#popupTitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+
+#historyBtns {
+  margin-top: 30px;
+  margin-left: 50px;
+}
+
+
+
+#rgnpopup {
+  display: none;
+}
+
+
+
+#rgnpopup-close {
+  color: rgb(0,0,0,0.5);
+  font-size: 25px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 8px;
+  border-color: rgb(0,0,0,0);
+  background-color: rgb(0,0,0,0);
+}
+
+
+#rgnpopup-close:hover {
+  background-color: rgb(113, 121, 131, 0.2);
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+
+
+#popupadvTitle {
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+#titleadv {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#historyadvBtns {
+  margin-top: 30px;
+  margin-left: 50px;
+}
+
+
+#goButton {
+  border-radius: 4px;
+  color: white;
+  background-color: rgb(43, 43, 136); 
+  box-shadow: none;
+  border: none;
+}
+
+
+.selectButton {
+  border-radius: 4px;
+}
+
+
+#titleMar1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+#titleMar2 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
